@@ -47,7 +47,7 @@ namespace API.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut()]
         [Route("{id}")]
-        public async Task<IActionResult> PutUser([FromRoute]int id,[FromBody] AppUser appUser)
+        public async Task<IActionResult> PutUser(int id,[FromBody] AppUser appUser)
         {
             if (id != appUser.id)
             {
