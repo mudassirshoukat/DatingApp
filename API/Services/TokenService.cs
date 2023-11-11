@@ -14,12 +14,14 @@ namespace API.Services
         {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
+
+
         public string CreateToken(AppUser user)
         {
             var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.NameId,user.UserName)
-            };
+                {
+                    new Claim(JwtRegisteredClaimNames.NameId,user.UserName)
+                };
 
             var cred = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
             var tokenDescripter = new SecurityTokenDescriptor
@@ -35,6 +37,8 @@ namespace API.Services
 
 
 
-         }
+        }
     }
+
+
 }

@@ -1,25 +1,37 @@
-
-
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from "@angular/common/http";
-import { FormsModule } from '@angular/forms'; // Import FormsModule if needed
-import { ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsModule if needed
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+
+
+import { FormsModule } from '@angular/forms'; 
+import { ReactiveFormsModule } from '@angular/forms';
+import { NavComponent } from './nav/nav.component';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { HomeComponent } from './home/home.component';
+import { RegisterComponent } from './register/register.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    // Include other components here
+    NavComponent,
+    HomeComponent,
+    RegisterComponent,
+  
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule, // Include if you plan to use template-driven forms
-    ReactiveFormsModule, // Include if you plan to use reactive forms
-    // Include other modules here
+    FormsModule, 
+    ReactiveFormsModule, 
+    BsDropdownModule.forRoot()
+   
   ],
   providers: [
     // Include services here
@@ -29,23 +41,3 @@ import { ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsMod
 export class AppModule { }
 
 
-// import { NgModule } from '@angular/core';
-// import { BrowserModule } from '@angular/platform-browser';
-
-// import { AppRoutingModule } from './app-routing.module';
-// import { AppComponent } from './app.component';
-// import {HttpClientModule} from "@angular/common/http"
-
-// @NgModule({
-//   declarations: [
-//     AppComponent
-//   ],
-//   imports: [
-//     BrowserModule,
-//     AppRoutingModule,
-//     HttpClientModule
-//   ],  
-//   providers: [],
-//   bootstrap: [AppComponent]
-// })
-// export class AppModule { }

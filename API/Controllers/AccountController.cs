@@ -2,7 +2,6 @@
 using API.DTO.AuthDtos;
 using API.Entities;
 using API.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
@@ -40,7 +39,7 @@ namespace API.Controllers
 
             await context.Users.AddAsync(user);
             await context.SaveChangesAsync();
-            return Ok(user);
+            return Ok(new LoginResponseDto { UserName=user.UserName,Token=tokenService.CreateToken(user)});
 
 
         }
