@@ -6,9 +6,15 @@ import { MemberDetailComponent } from './_components/members/member-detail/membe
 import { ListsComponent } from './_components/lists/lists.component';
 import { MessagesComponent } from './_components/messages/messages.component';
 import { authGuard } from './_Gaurds/auth.guard';
+import { TestErrorComponent } from './_components/errors/test-error/test-error.component';
+import { NotFoundComponent } from './_components/errors/not-found/not-found.component';
+import { ServerErrorComponent } from './_components/errors/server-error/server-error.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'error', component: TestErrorComponent },
+  { path: 'not-found', component: NotFoundComponent },
+  { path: 'server-error', component: ServerErrorComponent },
   { path: '', 
     runGuardsAndResolvers: 'always',
     canActivate:[authGuard],
@@ -20,7 +26,7 @@ const routes: Routes = [
     ]
   },
 
-  { path: '**', component: HomeComponent, pathMatch: 'full' }
+  { path: '**', component: NotFoundComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
