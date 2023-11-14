@@ -9,10 +9,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { FormsModule } from '@angular/forms'; 
 import { ReactiveFormsModule } from '@angular/forms';
-import { NavComponent } from './nav/nav.component';
+import { NavComponent } from './_components/nav/nav.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { HomeComponent } from './home/home.component';
-import { RegisterComponent } from './register/register.component';
+import { HomeComponent } from './_components/home/home.component';
+import { RegisterComponent } from './_components/register/register.component';
+
+import { ListsComponent } from './_components/lists/lists.component';
+import { MessagesComponent } from './_components/messages/messages.component';
+import { ToastrModule } from 'ngx-toastr';
+import { SharedModule } from './_modules/shared.module';
 
 
 @NgModule({
@@ -21,6 +26,8 @@ import { RegisterComponent } from './register/register.component';
     NavComponent,
     HomeComponent,
     RegisterComponent,
+    ListsComponent,
+    MessagesComponent,
   
   ],
   imports: [
@@ -30,7 +37,7 @@ import { RegisterComponent } from './register/register.component';
     HttpClientModule,
     FormsModule, 
     ReactiveFormsModule, 
-    BsDropdownModule.forRoot()
+   SharedModule
    
   ],
   providers: [

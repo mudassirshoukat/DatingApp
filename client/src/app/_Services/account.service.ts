@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { User } from '../_Models/User';
 
 @Injectable({
@@ -22,7 +22,7 @@ export class AccountService {
         if (user) {
           localStorage.setItem("user", JSON.stringify(user))
           this.CurrentUserSource.next(user)
-         
+
         }
         return user;
       })
@@ -31,20 +31,20 @@ export class AccountService {
   }
 
 
-Register(model:any){
-  return this.http.post<User>(this.BaseUrl+"Register",model).pipe(
-    map(user=>{
-      if (user) {
-        this.CurrentUserSource.next(user);
-        localStorage.setItem("user",JSON.stringify(user))
-      }
-      return user;
-    })
-    
-  
-  )
-  
-}
+  Register(model: any) {
+    return this.http.post<User>(this.BaseUrl + "Register", model).pipe(
+      map(user => {
+        if (user) {
+          this.CurrentUserSource.next(user);
+          localStorage.setItem("user", JSON.stringify(user))
+        }
+        return user;
+      })
+
+
+    )
+
+  }
 
 
   SetCurrentUser(User: User) {
@@ -54,6 +54,17 @@ Register(model:any){
   Logout() {
     localStorage.removeItem("user");
     this.CurrentUserSource.next(null);
+  }
+
+  IsLogIn(): boolean {
+    let check: boolean = false
+    this.CurrentUser$.pipe(
+      map(user => {
+        if (user) check = true;
+
+      })
+    ).subscribe()
+    return check
   }
 
 }
