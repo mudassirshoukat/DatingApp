@@ -1,4 +1,6 @@
 ﻿using API.Data;
+using API.Data.Repository;
+using API.Helpers;
 using API.Interfaces;
 using API.Services;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -21,6 +23,8 @@ namespace API.Extentions
             });
            Services.AddCors();
             Services.AddScoped<ITokenService, TokenService>();
+            Services.AddScoped<IUserRepository, UserRepository>();
+            Services.AddAutoMapper(typeof(AutoMapperProfiles));
             return Services;
         }
     }

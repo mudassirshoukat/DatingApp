@@ -4,6 +4,7 @@ using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231115073959_UserAndPhotoEntity")]
+    partial class UserAndPhotoEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,7 +74,26 @@ namespace API.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            City = "Sample City",
+                            Country = "Sample Country",
+                            Created = new DateTime(2023, 11, 15, 7, 39, 59, 573, DateTimeKind.Utc).AddTicks(3947),
+                            DateOfBirth = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Gender = "Male",
+                            Interests = "Programming, Reading",
+                            Introduction = "Hello, I'm John Doe.",
+                            KnownAs = "John Doe",
+                            LastActive = new DateTime(2023, 11, 15, 7, 39, 59, 573, DateTimeKind.Utc).AddTicks(3946),
+                            LookingFor = "Looking for someone special.",
+                            PasswordHash = new byte[] { 1, 2, 3, 4 },
+                            PasswordSalt = new byte[] { 5, 6, 7, 8 },
+                            UserName = "SampleUser"
+                        });
                 });
 
             modelBuilder.Entity("API.Entities.Photo", b =>
@@ -98,7 +120,7 @@ namespace API.Migrations
 
                     b.HasIndex("AppuserId");
 
-                    b.ToTable("Photos", (string)null);
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("API.Entities.Photo", b =>
