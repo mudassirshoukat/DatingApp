@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-test-error',
@@ -7,13 +8,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./test-error.component.css']
 })
 export class TestErrorComponent {
-  private BaseUrl = "https://localhost:44381/api/buggy/"
+  private BaseUrl = environment.ApiUrl
   ValidationErrors:string[]=[];
   
    constructor(private http:HttpClient) {}
 
    Get404Error(){
-    this.http.get(this.BaseUrl+"not-found").subscribe({
+    this.http.get(this.BaseUrl+"buggy/not-found").subscribe({
       next:Response=>console.log(Response),
       error:error=>console.log(error)
     })
@@ -22,7 +23,7 @@ export class TestErrorComponent {
 
 
    Get401Error(){
-    this.http.get(this.BaseUrl+"auth").subscribe({
+    this.http.get(this.BaseUrl+"buggy/auth").subscribe({
       next:Response=>console.log(Response),
       error:error=>
         console.log(error)
@@ -34,7 +35,7 @@ export class TestErrorComponent {
 
 
    Get400Error(){
-    this.http.get(this.BaseUrl+"bad-request").subscribe({
+    this.http.get(this.BaseUrl+"buggy/bad-request").subscribe({
       next:Response=>console.log(Response),
       error:error=>console.log(error)
     })
@@ -43,7 +44,7 @@ export class TestErrorComponent {
 
 
    Get500Error(){
-    this.http.get(this.BaseUrl+"server-error").subscribe({
+    this.http.get(this.BaseUrl+"buggy/server-error").subscribe({
       next:Response=>console.log(Response),
       error:error=>console.log(error)
     })
@@ -52,7 +53,7 @@ export class TestErrorComponent {
 
 
    Get400ValidationError(){
-    this.http.post( "https://localhost:44381/api/account/register",{'password':"12"}).subscribe({
+    this.http.post( this.BaseUrl+"account/register",{'password':"12"}).subscribe({
       next:Response=>console.log(Response),
       error:error=>{
         console.log(error)

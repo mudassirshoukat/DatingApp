@@ -32,7 +32,7 @@ export class NavComponent implements OnInit {
         this.toast.success("Login Success","Welcome")
       },
      
-    error: error => this.toast.error(error.error,"Failed")
+    error: error => this.toast.error("Failed")
     })
   }
 
