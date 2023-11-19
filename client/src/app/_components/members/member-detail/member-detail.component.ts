@@ -10,7 +10,7 @@ import { MembersService } from 'src/app/_Services/members.service';
   styleUrls: ['./member-detail.component.css']
 })
 export class MemberDetailComponent implements OnInit {
-  Member: MemberModel | undefined;
+  member: MemberModel | undefined;
   galleryOptions: NgxGalleryOptions[]=[];
   galleryImages: NgxGalleryImage[] = [];
 
@@ -35,9 +35,9 @@ export class MemberDetailComponent implements OnInit {
 
 
   Getimages() {
-  if(!this.Member?.Photos) return [];
+  if(!this.member?.Photos) return [];
   const imageUrl=[]
-  for (const photo of this.Member.Photos) {
+  for (const photo of this.member.Photos) {
     imageUrl.push({
       small: photo.Url,
       medium: photo.Url,
@@ -53,7 +53,7 @@ return imageUrl
     if (!UserName) return;
     this.memberService.GetMember(UserName).subscribe({
       next: member => {
-        this.Member = member;
+        this.member = member;
         this.galleryImages=this.Getimages()
       }
     });

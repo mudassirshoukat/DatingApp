@@ -21,6 +21,8 @@ import { MemberDetailComponent } from './_components/members/member-detail/membe
 import { MemberListComponent } from './_components/members/member-list/member-list.component';
 import { MemberCardComponent } from './_components/members/member-card/member-card.component';
 import { JwtInterceptor } from './_Interceptors/jwt.interceptor';
+import { MemberEditComponent } from './_components/members/member-edit/member-edit.component';
+import { BusyLoadingInterceptor } from './_Interceptors/busy-loading.interceptor';
 
 
 @NgModule({
@@ -37,6 +39,7 @@ import { JwtInterceptor } from './_Interceptors/jwt.interceptor';
     NotFoundComponent,
     ServerErrorComponent,
     MemberCardComponent,
+    MemberEditComponent,
   
   ],
   imports: [
@@ -46,12 +49,14 @@ import { JwtInterceptor } from './_Interceptors/jwt.interceptor';
     HttpClientModule,
     FormsModule, 
     ReactiveFormsModule, 
+    
    SharedModule
    
   ],
   providers: [
   {provide: HTTP_INTERCEPTORS,useClass: ErrorInterceptor,multi:true},
-  {provide: HTTP_INTERCEPTORS,useClass: JwtInterceptor,multi:true}
+  {provide: HTTP_INTERCEPTORS,useClass: JwtInterceptor,multi:true},
+  {provide: HTTP_INTERCEPTORS,useClass: BusyLoadingInterceptor,multi:true},
   ],
   bootstrap: [AppComponent],
 })

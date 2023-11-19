@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -66,35 +67,16 @@ namespace API.Controllers
 
 
         // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut()]
-        [Route("{id}")]
-        public async Task<IActionResult> PutUser(int id,[FromBody] AppUser appUser)
+        
+        public async Task<IActionResult> PutUser(MemberUpdateRequestDto member)
         {
-            if (id != appUser.id)
-            {
-                return BadRequest();
-            }
+            string userName = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            AppUser user =await _repo.GetUserByUserNameAsync(userName);
+            mapper.Map(member, user);
+            if (await _repo.SaveAllAsync()) return NoContent();
+            return BadRequest("Failed to update resource");
 
-            _repo.Update(appUser);
-
-            try
-            {
-                await _repo.SaveAllAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
         // POST: api/Users

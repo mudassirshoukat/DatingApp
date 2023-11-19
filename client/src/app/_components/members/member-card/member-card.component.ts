@@ -13,7 +13,7 @@ export class MemberCardComponent {
   constructor(private route:Router){}
    
 ProfileIconClick(UserName:string){
-  this.route.navigateByUrl(`member/${UserName}`)
+  this.route.navigateByUrl(`/members/${UserName}`)
 
 }
 }

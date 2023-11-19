@@ -1,33 +1,33 @@
-<div class="row" *ngIf="Member">
+<div class="row" *ngIf="member">
     <div class="col-4">
         <div class="card">
-            <img src="{{Member.PhotoUrl || './assets/user.png'}}" alt="{{Member.KnownAs}}"
+            <img src="{{member.PhotoUrl || './assets/user.png'}}" alt="{{member.KnownAs}}"
                 class="card-img-top img-thumbnail">
 
             <div class="card-body">
                 <div>
                     <strong>Location:</strong>
-                    <p>{{Member.City}}, {{Member.Country}}</p>
+                    <p>{{member.City}}, {{member.Country}}</p>
                 </div>
 
                 <div>
                     <strong>Age:</strong>
-                    <p>{{Member.Age}}</p>
+                    <p>{{member.Age}}</p>
                 </div>
 
                 <div>
                     <strong>Last active:</strong>
-                    <p>{{Member.LastActive}}</p>
+                    <p>{{member.LastActive}}</p>
                 </div>
 
                 <div>
                     <strong>Member Since</strong>
-                    <p>{{Member.Created}}</p>
+                    <p>{{member.Created}}</p>
                 </div>
 
                 <div>
                     <strong>Location:</strong>
-                    <p>{{Member.City}}, {{Member.Country}}</p>
+                    <p>{{member.City}}, {{member.Country}}</p>
                 </div>
 
             </div>
@@ -45,16 +45,16 @@
     <div class="col-8">
         <tabset class="member-tabs">
 
-            <tab heading="About {{Member.KnownAs}}">
+            <tab heading="About {{member.KnownAs}}">
                 <h4>Description</h4>
-                <p>{{Member.Introduction}}</p>
+                <p>{{member.Introduction}}</p>
                 <h4>Looking For</h4>
-                <p>{{Member.LookingFor}}</p>
+                <p>{{member.LookingFor}}</p>
             </tab>
 
             <tab heading="Interests">
                 <h4>Interests</h4>
-                <p>{{Member.Interests}}</p>
+                <p>{{member.Interests}}</p>
             </tab>
 
             <tab heading="Photos">
