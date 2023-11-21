@@ -23,6 +23,7 @@ import { MemberCardComponent } from './_components/members/member-card/member-ca
 import { JwtInterceptor } from './_Interceptors/jwt.interceptor';
 import { MemberEditComponent } from './_components/members/member-edit/member-edit.component';
 import { BusyLoadingInterceptor } from './_Interceptors/busy-loading.interceptor';
+import { PhotoEditorComponent } from './_components/members/photo-editor/photo-editor.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { BusyLoadingInterceptor } from './_Interceptors/busy-loading.interceptor
     ServerErrorComponent,
     MemberCardComponent,
     MemberEditComponent,
+    PhotoEditorComponent,
   
   ],
   imports: [

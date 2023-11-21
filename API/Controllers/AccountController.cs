@@ -1,5 +1,6 @@
 ﻿using API.Data;
 using API.DTO.AuthDtos;
+using API.DTO.PhotoDtos;
 using API.Entities;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ namespace API.Controllers
         [HttpPost]
         [Route("Register")]
 
-        public async Task<ActionResult<AppUser>> Register(RegisterRequestDto dto)
+        public async Task<ActionResult<LoginResponseDto>> Register(RegisterRequestDto dto)
         {
             if (await UserExists(dto.UserName)) return BadRequest("User is Taken");
 
@@ -39,7 +40,10 @@ namespace API.Controllers
 
             await context.Users.AddAsync(user);
             await context.SaveChangesAsync();
-            return Ok(new LoginResponseDto { UserName=user.UserName,Token=tokenService.CreateToken(user)});
+            return Ok(new LoginResponseDto {
+                UserName=user.UserName,
+                Token=tokenService.CreateToken(user),
+                PhotoUrl=user.Photos.FirstOrDefault(x=>x.IsMain)?.Url});
 
 
         }
@@ -49,7 +53,7 @@ namespace API.Controllers
         [Route("Login")]
         public async Task<ActionResult<LoginResponseDto>> Login(LoginRequestDto dto)
         {
-            AppUser user = await context.Users.FirstOrDefaultAsync(x=>x.UserName.ToLower()== dto.UserName.ToLower());
+            AppUser user = await context.Users.Include(x => x.Photos).FirstOrDefaultAsync(x=>x.UserName.ToLower()== dto.UserName.ToLower());
 
             if (user == null) return Unauthorized("User Not Exist");
 
@@ -63,7 +67,8 @@ namespace API.Controllers
             return new LoginResponseDto
             {
                 UserName=user.UserName,
-                Token=tokenService.CreateToken(user)
+                Token=tokenService.CreateToken(user),
+                PhotoUrl=user.Photos?.FirstOrDefault(x=>x.IsMain)?.Url
 
             };
 

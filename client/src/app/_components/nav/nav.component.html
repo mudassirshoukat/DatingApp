@@ -23,6 +23,7 @@
       
 
         <div class="dropdown" *ngIf="(accountService.CurrentUser$|async) as user" dropdown>
+          <img class="rounded-profile-pic" src="{{user.PhotoUrl || './assets/user.png'}}" >
           <a  class="dropdown-toggle text-light text-decoration-none" dropdownToggle>Welcome {{user.UserName|titlecase}}</a>
           <div class="dropdown-menu mt-3" *dropdownMenu>
             <a class="dropdown-item" routerLink="/member/edit">Edit Profile</a>

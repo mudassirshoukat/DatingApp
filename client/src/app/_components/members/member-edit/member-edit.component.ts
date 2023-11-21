@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
 import { MemberModel } from 'src/app/_Models/MemberModel';
+import { PhotoModel } from 'src/app/_Models/PhotoModel';
 import { UserModel } from 'src/app/_Models/UserModel';
 import { AccountService } from 'src/app/_Services/account.service';
 import { MembersService } from 'src/app/_Services/members.service';
@@ -54,5 +55,7 @@ updateMember(){
   
   
 }
+
+
 
 }
