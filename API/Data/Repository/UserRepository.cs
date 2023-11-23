@@ -34,7 +34,7 @@ namespace API.Data.Repository
         {
              var appUser =await _context.Users.Include(x => x.Photos).FirstOrDefaultAsync(x=>x.UserName.ToLower()==UserName.ToLower());
             return appUser;
-        Console.WriteLine("midassir"); }
+       }
 
         void IUserRepository.DeleteUserAsync(AppUser user)
         {

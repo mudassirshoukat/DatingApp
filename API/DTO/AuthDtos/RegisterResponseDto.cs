@@ -1,11 +1,10 @@
 ﻿namespace API.DTO.AuthDtos
 {
-    public class LoginResponseDto
+    public class RegisterResponseDto
     {
-        
         public string UserName { get; set; }
         public string Token { get; set; }
-        public string PhotoUrl { get; set; }
-        public string KnownAs { get; set;}
+       
+        public string KnownAs { get; set; }
     }
 }

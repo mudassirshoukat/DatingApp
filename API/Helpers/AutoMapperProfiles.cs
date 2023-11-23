@@ -1,4 +1,5 @@
-﻿using API.DTO.MemberDtos;
+﻿using API.DTO.AuthDtos;
+using API.DTO.MemberDtos;
 using API.DTO.PhotoDtos;
 using API.Entities;
 using AutoMapper;
@@ -15,6 +16,7 @@ namespace API.Helpers
             
             CreateMap<Photo, PhotoResponseDto>();
             CreateMap<MemberUpdateRequestDto, AppUser>();
+            CreateMap<RegisterRequestDto, AppUser>();
         }
     }
 }
