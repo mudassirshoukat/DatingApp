@@ -1,15 +1,12 @@
-﻿using API.Data;
-using API.DTO.MemberDtos;
+﻿using API.DTO.MemberDtos;
 using API.DTO.PhotoDtos;
 using API.Entities;
 using API.Extentions;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-
-using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -31,29 +28,62 @@ namespace API.Controllers
 
 
         // GET: api/Users
+        //[HttpGet]
+        ////[Authorize]
+        //public async Task<ActionResult<IEnumerable<MemberResponseDto>>> GetUsers([FromQuery] UserParams prms)
+        //{
+        //    var users = await _UserRepo.GetAllUserAsync(prms);
+
+
+        //    var dto = mapper.Map<IEnumerable<MemberResponseDto>>(users);
+        //    return Ok(dto);
+        //}
+
         [HttpGet]
         //[Authorize]
-        public async Task<ActionResult<IEnumerable<MemberResponseDto>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<MemberResponseDto>>> GetUsers([FromQuery] UserParams prms)
         {
-            var users = await _UserRepo.GetAllUserAsync();
-            var dto = mapper.Map<IEnumerable<MemberResponseDto>>(users);
-            return Ok(dto);
+            var CurrentUser = await _UserRepo.GetUserByUserNameAsync(User.GetUserName());
+            prms.CurrentUserName = CurrentUser.UserName;
+            if (string.IsNullOrEmpty(prms.Gender))
+            {
+                prms.Gender=CurrentUser.Gender=="male"?"female":"male";
+            }
+
+
+            PagedList<AppUser> users = await _UserRepo.GetAllUserAsync(prms);
+
+            var mappedUsers = mapper.Map<IEnumerable<MemberResponseDto>>(users);
+
+            var mappedPagedList = new PagedList<MemberResponseDto>(
+                mappedUsers,
+                users.TotalCount,
+                users.CurrentPage,
+                users.PageSize
+            );
+
+            Response.AddPaginationHeader(
+                new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages));
+
+
+
+            return Ok(mappedPagedList);
         }
 
         // GET: api/Users/5
-        [HttpGet()]
-        [Route("{id:int}")]
-        public async Task<ActionResult<MemberResponseDto>> GetUserById(int id)
-        {
-            var appUser = await _UserRepo.GetUserByIdAsync(id);
+        //[HttpGet()]
+        //[Route("{id:int}")]
+        //public async Task<ActionResult<MemberResponseDto>> GetUserById(int id)
+        //{
+        //    var appUser = await _UserRepo.GetUserByIdAsync(id);
 
-            if (appUser == null)
-            {
-                return NotFound();
-            }
+        //    if (appUser == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(mapper.Map<MemberResponseDto>(appUser));
-        }
+        //    return Ok(mapper.Map<MemberResponseDto>(appUser));
+        //}
 
 
         [HttpGet()]

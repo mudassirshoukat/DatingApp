@@ -13,6 +13,7 @@ namespace API.Helpers
             CreateMap<AppUser, MemberResponseDto>()
             .ForMember(dist => dist.PhotoUrl,
             opt => opt.MapFrom(src => src.Photos.FirstOrDefault(a => a.IsMain).Url));
+
             
             CreateMap<Photo, PhotoResponseDto>();
             CreateMap<MemberUpdateRequestDto, AppUser>();

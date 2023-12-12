@@ -1,4 +1,7 @@
-﻿using API.Entities;
+﻿using API.DTO.MemberDtos;
+using API.Entities;
+using API.Helpers;
+using System.Collections.Generic;
 
 namespace API.Interfaces
 {
@@ -7,7 +10,7 @@ namespace API.Interfaces
         void Update(AppUser user);
         Task<bool> SaveAllAsync();
         bool UserExists(int id);
-        Task<IEnumerable<AppUser>> GetAllUserAsync();
+        Task<PagedList<AppUser>> GetAllUserAsync(UserParams prms);
      
         Task<AppUser> GetUserByIdAsync(int Id);
         

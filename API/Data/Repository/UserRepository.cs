@@ -1,4 +1,5 @@
 ﻿using API.Entities;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -20,14 +21,34 @@ namespace API.Data.Repository
 
 
 
-        async Task<IEnumerable<AppUser>> IUserRepository.GetAllUserAsync()
+        //async Task<IEnumerable<AppUser>> IUserRepository.GetAllUserAsync(UserParams prms)
+        //{
+        //    return await _context.Users.Include(x=>x.Photos).ToListAsync() ;
+        //}
+
+        async Task<PagedList<AppUser>> IUserRepository.GetAllUserAsync(UserParams prms)
         {
-            return await _context.Users.Include(x=>x.Photos).ToListAsync() ;
+            var query = _context.Users.AsQueryable();
+            query = query.Where(x => x.UserName != prms.CurrentUserName);
+            query = query.Where(x => x.Gender == prms.Gender);
+            var minDob= DateOnly.FromDateTime(DateTime.Today.AddYears(-prms.MaxAge-1));
+            var maxDob= DateOnly.FromDateTime(DateTime.Today.AddYears(-prms.MinAge));
+            query = query.Where(x => x.DateOfBirth <= maxDob && x.DateOfBirth >= minDob);
+            query = prms.OrderBy switch
+            {
+                "Created" => query.OrderByDescending(x => x.Created),
+                _ => query.OrderByDescending(x => x.LastActive)
+
+            };
+
+
+            query =query.Include(x => x.Photos).AsNoTracking();
+            return await PagedList<AppUser>.CreateAsync(query, prms.PageNumber, prms.PageSize);
         }
 
         async Task<AppUser?> IUserRepository.GetUserByIdAsync(int Id)
         {
-            return await _context.Users.Include(x => x.Photos).FirstOrDefaultAsync(x=>x.id== Id);
+            return await _context.Users.FindAsync(Id);
         }
 
         async Task<AppUser?> IUserRepository.GetUserByUserNameAsync(string UserName)

@@ -3,6 +3,7 @@ export interface UserModel{
     Token:string;
     PhotoUrl:string;
     KnownAs:string;
+    Gender:string;
 
 }
 
