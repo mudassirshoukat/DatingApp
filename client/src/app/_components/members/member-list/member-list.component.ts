@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, take } from 'rxjs';
 import { MemberModel } from 'src/app/_Models/MemberModel';
 import { PaginationModel } from 'src/app/_Models/PaginationModel';
-import { QueryParams } from 'src/app/_Models/QueryParams';
+import { UserQueryParams } from 'src/app/_Models/UserQueryParams';
 import { UserModel } from 'src/app/_Models/UserModel';
 import { AccountService } from 'src/app/_Services/account.service';
 import { MembersService } from 'src/app/_Services/members.service';
@@ -16,7 +16,7 @@ export class MemberListComponent implements OnInit {
   // members$: Observable<MemberModel[]>|undefined
   members: MemberModel[] = []
   pagination: PaginationModel | undefined
-  queryPrms: QueryParams | undefined;
+  queryPrms: UserQueryParams | undefined;
   genderList=[{Value:"male",Display:"Males"},{Value:"female",Display:"Females"}];
 
 

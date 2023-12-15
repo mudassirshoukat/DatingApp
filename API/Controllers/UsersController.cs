@@ -41,7 +41,7 @@ namespace API.Controllers
 
         [HttpGet]
         //[Authorize]
-        public async Task<ActionResult<IEnumerable<MemberResponseDto>>> GetUsers([FromQuery] UserParams prms)
+        public async Task<ActionResult<PagedList<MemberResponseDto>>> GetUsers([FromQuery] UserQueryParams prms)
         {
             var CurrentUser = await _UserRepo.GetUserByUserNameAsync(User.GetUserName());
             prms.CurrentUserName = CurrentUser.UserName;

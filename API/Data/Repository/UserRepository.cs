@@ -26,7 +26,7 @@ namespace API.Data.Repository
         //    return await _context.Users.Include(x=>x.Photos).ToListAsync() ;
         //}
 
-        async Task<PagedList<AppUser>> IUserRepository.GetAllUserAsync(UserParams prms)
+        async Task<PagedList<AppUser>> IUserRepository.GetAllUserAsync(UserQueryParams prms)
         {
             var query = _context.Users.AsQueryable();
             query = query.Where(x => x.UserName != prms.CurrentUserName);

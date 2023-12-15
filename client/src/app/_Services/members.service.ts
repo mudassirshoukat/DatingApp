@@ -5,8 +5,9 @@ import { environment } from 'src/environments/environment';
 import { UserModel } from '../_Models/UserModel';
 import { map, of, take } from 'rxjs';
 import { PaginationResult } from '../_Models/PaginationModel';
-import { QueryParams } from '../_Models/QueryParams';
+import { UserQueryParams } from '../_Models/UserQueryParams';
 import { AccountService } from './account.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,45 +15,44 @@ import { AccountService } from './account.service';
 export class MembersService {
   private baseurl: string = environment.ApiUrl
   members: MemberModel[] = [];
-  paginationResult: PaginationResult<MemberModel[]> = {};
   memberCache = new Map();
-  queryPrms:QueryParams|undefined;
-  user:UserModel|undefined;
+  queryPrms: UserQueryParams | undefined;
+  user: UserModel | undefined;
 
 
 
-  constructor(private http: HttpClient,private accountService:AccountService) {
+  constructor(private http: HttpClient, private accountService: AccountService) {
     this.accountService.CurrentUser$.pipe(take(1)).subscribe({
       next: Response => {
         if (Response) {
-          this.queryPrms = new QueryParams(Response);
+          this.queryPrms = new UserQueryParams(Response);
           this.user = Response
         }
       }
     });
-   }
-
-   getQueryPrms(){
-    return this.queryPrms;
-   }
-
-   setQueryPrms(prms:QueryParams){
-    this.queryPrms=prms;
-
-   }
-
-   resetQueryPrms(){
-    if(this.user){
-    this.queryPrms=new QueryParams(this.user);
-    return this.queryPrms
-    
   }
-  return;
-}
+
+  getQueryPrms() {
+    return this.queryPrms;
+  }
+
+  setQueryPrms(prms: UserQueryParams) {
+    this.queryPrms = prms;
+
+  }
+
+  resetQueryPrms() {
+    if (this.user) {
+      this.queryPrms = new UserQueryParams(this.user);
+      return this.queryPrms
+
+    }
+    return;
+  }
 
 
-  GetMembers(prms: QueryParams) {
-
+  GetMembers(prms: UserQueryParams) {
+    
     var response = this.memberCache.get(Object.values(prms).join('-'));
     if (response) return of(response);
 
@@ -61,6 +61,8 @@ export class MembersService {
     params = params.append('MaxAge', prms.MaxAge);
     params = params.append('Gender', prms.Gender);
     params = params.append('OrderBy', prms.OrderBy);
+
+   
     return this.GetpaginatedResult<MemberModel[]>(this.baseurl + "users", params).pipe(
       map(res => {
         this.memberCache.set(Object.values(prms).join('-'), res);
@@ -69,6 +71,9 @@ export class MembersService {
     );
 
   }
+
+
+
 
 
   GetMember(UserName: string) {
@@ -103,13 +108,14 @@ export class MembersService {
   }
 
 
-
+ 
 
   private GetpaginatedResult<T>(url: string, params: HttpParams) {
 
     const paginatedResult: PaginationResult<T> = new PaginationResult<T>;
 
     return this.http.get<T>(url, { observe: 'response', params }).pipe(
+
       map(response => {
         if (response.body) {
           paginatedResult.Result = response.body;
@@ -133,7 +139,7 @@ export class MembersService {
 
     return params;
   }
-
+ 
 
 
 }
