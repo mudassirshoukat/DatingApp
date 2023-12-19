@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { map, take } from 'rxjs';
 import { LikeMembersModel } from 'src/app/_Models/LikeMembersModel';
-import { LikeQueryParams } from 'src/app/_Models/LikeQueryParams';
+import { LikeQueryParams } from 'src/app/_Models/QueryParams/LikeQueryParams';
 import { MemberModel } from 'src/app/_Models/MemberModel';
 import { PaginationModel } from 'src/app/_Models/PaginationModel';
 import { LikeService } from 'src/app/_Services/like.service';

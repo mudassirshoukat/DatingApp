@@ -2,14 +2,16 @@
 using API.Entities;
 using API.Extentions;
 using API.Helpers;
-using API.Interfaces;
+using API.Helpers.QueryParams;
+using API.Interfaces.RepoInterfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    
+    [Authorize]
     public class LikeController : BaseApiController
     {
         private readonly IUserRepository userRepo;

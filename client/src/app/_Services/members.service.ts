@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { UserModel } from '../_Models/UserModel';
 import { map, of, take } from 'rxjs';
 import { PaginationResult } from '../_Models/PaginationModel';
-import { UserQueryParams } from '../_Models/UserQueryParams';
+import { UserQueryParams } from '../_Models/QueryParams/UserQueryParams';
 import { AccountService } from './account.service';
 
 

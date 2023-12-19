@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, take } from 'rxjs';
 import { MemberModel } from 'src/app/_Models/MemberModel';
 import { PaginationModel } from 'src/app/_Models/PaginationModel';
-import { UserQueryParams } from 'src/app/_Models/UserQueryParams';
+import { UserQueryParams } from 'src/app/_Models/QueryParams/UserQueryParams';
 import { UserModel } from 'src/app/_Models/UserModel';
 import { AccountService } from 'src/app/_Services/account.service';
 import { MembersService } from 'src/app/_Services/members.service';

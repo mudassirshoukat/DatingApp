@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { LikeQueryParams } from '../_Models/LikeQueryParams';
+import { LikeQueryParams } from '../_Models/QueryParams/LikeQueryParams';
 // import { MembersService } from './members.service';
 import { LikeMembersModel } from '../_Models/LikeMembersModel';
 import { map } from 'rxjs';

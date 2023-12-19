@@ -1,5 +1,5 @@
 import { PaginationQueryParams } from "./PaginationQueryParams";
-import { UserModel } from "./UserModel";
+import { UserModel } from "../UserModel";
 
 export class UserQueryParams extends PaginationQueryParams {
     

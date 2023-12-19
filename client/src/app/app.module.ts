@@ -26,6 +26,7 @@ import { BusyLoadingInterceptor } from './_Interceptors/busy-loading.interceptor
 import { PhotoEditorComponent } from './_components/members/photo-editor/photo-editor.component';
 import { TextInputComponent } from './_components/_forms/text-input/text-input.component';
 import { DatePickerComponent } from './_components/_forms/date-picker/date-picker.component';
+import { MemberMessagesComponent } from './_components/member-messages/member-messages.component';
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import { DatePickerComponent } from './_components/_forms/date-picker/date-picke
     PhotoEditorComponent,
     TextInputComponent,
     DatePickerComponent,
+    MemberMessagesComponent
   
   ],
   imports: [

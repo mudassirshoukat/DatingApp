@@ -1,6 +1,6 @@
 ﻿using API.Entities;
 using API.Extentions;
-using API.Interfaces;
+using API.Interfaces.RepoInterfaces;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace API.Helpers

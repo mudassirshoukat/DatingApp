@@ -1,6 +1,7 @@
 ﻿using API.Entities;
 using API.Helpers;
-using API.Interfaces;
+using API.Helpers.QueryParams;
+using API.Interfaces.RepoInterfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;

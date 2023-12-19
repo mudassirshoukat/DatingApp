@@ -2,6 +2,7 @@
 using API.Data.Repository;
 using API.Helpers;
 using API.Interfaces;
+using API.Interfaces.RepoInterfaces;
 using API.Services;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
@@ -23,12 +24,17 @@ namespace API.Extentions
             });
            Services.AddCors();
             Services.AddScoped<ITokenService, TokenService>();
+            Services.AddScoped<IPhotoService, PhotoService>();
+
             Services.AddScoped<IUserRepository, UserRepository>();
+            Services.AddScoped<ILikesRepository, LikesRepository>();
+            Services.AddScoped<IMessageRepository, MessageRepository>();
+
             Services.AddAutoMapper(typeof(AutoMapperProfiles));
             Services.Configure<CloudinarySettings>(Config.GetSection("CloudinarySettings"));
-            Services.AddScoped<IPhotoService, PhotoService>();
-            Services.AddScoped<LogUserActivity>();
-            Services.AddScoped<ILikesRepository, LikesRepository>();
+            
+            Services.AddScoped<LogUserActivity>();  //actionFilter for LastActive Func
+            
             return Services;
         }
     }

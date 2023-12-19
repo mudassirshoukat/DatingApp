@@ -1,1 +1,83 @@
-<p>messages works!</p>
+<div class="mb-4 d-flex">
+    <div class="btn-group" name="queryParams.Container">
+        <button class="btn btn-primary" btnRadio="UnRead" [(ngModel)]="queryParams.Container" (click)="loadMessages()">
+            <i class="fa fa-envelope"></i> UnRead</button>
+
+        <button class="btn btn-primary" btnRadio="InBox" [(ngModel)]="queryParams.Container" (click)="loadMessages()">
+            <i class="fa fa-envelope-open"></i> InBox</button>
+
+        <button class="btn btn-primary" btnRadio="OutBox" [(ngModel)]="queryParams.Container" (click)="loadMessages()">
+            <i class="fa fa-paper-plane"></i> OutBox</button>
+    </div>
+</div>
+
+
+<!-- table -->
+<div class="row" *ngIf="!messages||messages.length===0">
+    <h3>No Messages
+    </h3>
+</div>
+
+<div class="row" *ngIf="messages&&messages.length>0">
+
+    <table class="table table-hover" style="cursor: pointer;">
+
+        <thead>
+            <tr>
+                <td style="width: 40%;">Messages</td>
+                <td style="width: 20%;" *ngIf="queryParams.Container==='InBox'">From</td>
+                <td style="width: 20%;" *ngIf="queryParams.Container==='OutBox'">To</td>
+                <td style="width: 20%;" *ngIf="queryParams.Container==='InBox'">Recieved</td>
+                <td style="width: 20%;" *ngIf="queryParams.Container==='OutBox'">Sent</td>
+                <td style="width: 20%;"></td>
+            </tr>
+        </thead>
+
+        <tbody class="align-middle">
+            <tr
+             [hidden]="loading" *ngFor="let message of messages"
+             routerLink="{{queryParams.Container==='OutBox'?
+             '/members/'+message.RecipientUserName
+             :'/members/'+message.SenderUserName }}"
+             [queryParams]="{tab:'Messages'}"
+            >
+
+                <td>{{message.Content}}</td>
+
+                <td>
+
+                    <div *ngIf="queryParams.Container==='OutBox'">
+                        <img class="img-circle rounded-circle me-2"
+                            src="{{message.RecipientPhotoUrl||'./assets/user.png'}}" alt="RecipientPhoto">
+                        <strong>{{message.RecipientUserName|titlecase}}</strong>
+                    </div>
+
+                    <div *ngIf="queryParams.Container==='InBox'">
+                        <img class="img-circle rounded-circle me-2"
+                            src="{{message.SenderPhotourl||'./assets/user.png'}}" alt="SenderPhoto">
+                        <strong>{{message.SenderUserName|titlecase}}</strong>
+
+                    </div>
+
+                </td>
+                <td>{{message.MessageSent+'Z'|timeago}}</td>
+                <td>
+                    <button class="btn btn-danger"
+                 (click)="$event.stopPropagation()"
+                 (click)="deleteMessage(message.Id)">Delete</button>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+<div class="d-flex justify-content-center align-items-end pagination-container" *ngIf="!loading&& pagination&&messages &&messages.length>0">
+    <pagination [totalItems]="pagination.TotalItems" [itemsPerPage]="pagination.ItemsPerPage" [maxSize]="10"
+        [(ngModel)]="pagination.CurrentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+
+    </pagination>
+</div>

@@ -2,7 +2,8 @@
 using API.Entities;
 using API.Extentions;
 using API.Helpers;
-using API.Interfaces;
+using API.Helpers.QueryParams;
+using API.Interfaces.RepoInterfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data.Repository
