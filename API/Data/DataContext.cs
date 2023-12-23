@@ -1,26 +1,30 @@
 ﻿using API.Entities;
 using API.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace API.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<AppUser,AppRole, int, IdentityUserClaim<int>,
+        AppUserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
+
     {
         public DataContext(DbContextOptions options) : base(options)
         {
         }
-        public DbSet<AppUser> Users { get; set; }
+        //public DbSet<AppUser> Users { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<UserLike> Likes { get; set; }
         public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder Builder)
         {
-            
+            base.OnModelCreating(Builder);
 
             // (UserLike Fluent Validations)
-            base.OnModelCreating(Builder);
+
             Builder.Entity<UserLike>().HasKey(x => new { x.SourceUserId, x.TargetUserId });
             Builder.Entity<UserLike>()
                 .HasOne(x => x.SourceUser)
@@ -53,6 +57,12 @@ namespace API.Data
             // (AppUser) Fluent Validations
 
             Builder.Entity<AppUser>().Property(x => x.DateOfBirth).HasConversion<DateOnlyConverter>();
+
+
+            //(AppUserRole flunt validation)
+            Builder.Entity<AppUser>().HasMany(a => a.UserRoles).WithOne(x => x.User).HasForeignKey(x => x.UserId).IsRequired();
+            Builder.Entity<AppRole>().HasMany(a => a.UserRoles).WithOne(x => x.Role).HasForeignKey(x => x.RoleId).IsRequired();
+
 
         }
 

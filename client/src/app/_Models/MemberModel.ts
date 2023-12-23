@@ -1,7 +1,7 @@
 import { PhotoModel } from "./PhotoModel";
 
 export interface MemberModel {
-  id: number;
+  Id: number;
   UserName: string;
   PhotoUrl: string;
   Age: number;

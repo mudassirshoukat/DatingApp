@@ -35,13 +35,13 @@ namespace API.Data.Repository
             if (prms.Predicate == "Liked")
             {
                 Likes = Likes.Where(like => like.SourceUserId == prms.UserId);
-                Users = Users.Where(user => Likes.Any(like => like.TargetUserId == user.id));
+                Users = Users.Where(user => Likes.Any(like => like.TargetUserId == user.Id));
             }
 
             if (prms.Predicate == "LikedBy")
             {
                 Likes = Likes.Where(like => like.TargetUserId == prms.UserId);
-                Users = Users.Where(user => Likes.Any(like => like.SourceUserId == user.id));
+                Users = Users.Where(user => Likes.Any(like => like.SourceUserId == user.Id));
             }
 
             var page = await PagedList<AppUser>.CreateAsync(Users, prms.PageNumber, prms.PageSize);
@@ -76,7 +76,7 @@ namespace API.Data.Repository
 
         public async Task<AppUser> GetUserWithLikes(int userId)
         {
-            return await context.Users.Include(x => x.LikedUsers).FirstOrDefaultAsync(x=>x.id==userId);
+            return await context.Users.Include(x => x.LikedUsers).FirstOrDefaultAsync(x=>x.Id==userId);
         }
     }
 }

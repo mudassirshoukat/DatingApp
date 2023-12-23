@@ -3,10 +3,14 @@ using API.DTO.AuthDtos;
 using API.DTO.PhotoDtos;
 using API.Entities;
 using API.Interfaces;
+using API.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -15,16 +19,19 @@ namespace API.Controllers
    
     public class AccountController : BaseApiController
     {
-        private readonly DataContext context;
+        
+        private readonly UserManager<AppUser> userManager;
         private readonly ITokenService tokenService;
         private readonly IMapper _mapper;
 
-        public AccountController( DataContext context,ITokenService tokenService,IMapper mapper)
+        public AccountController( UserManager<AppUser> userManager, ITokenService tokenService,IMapper mapper)
         {
-            this.context = context;
+            
+            this.userManager = userManager;
             this.tokenService = tokenService;
             this._mapper = mapper;
         }
+
 
         [HttpPost]
         [Route("Register")]
@@ -33,20 +40,17 @@ namespace API.Controllers
         {
             if (await UserExists(dto.UserName)) return BadRequest("User is Taken");
             var user = _mapper.Map<AppUser>(dto);
-
-            using var Hmac = new HMACSHA512();
-
-            
-
-                user.PasswordHash = Hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password));
-               user.PasswordSalt = Hmac.Key;
            
 
-            await context.Users.AddAsync(user);
-            await context.SaveChangesAsync();
+           var result= await userManager.CreateAsync(user,dto.Password);
+            if (!result.Succeeded) return BadRequest(result.Errors);
+
+            var roleResult = await userManager.AddToRoleAsync(user, "Member");
+            if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
+
             return Ok(new RegisterResponseDto {
                 UserName=user.UserName,
-                Token=tokenService.CreateToken(user),
+                Token= await tokenService.CreateToken(user),
                 KnownAs=user.KnownAs,
                 Gender=user.Gender
                 
@@ -56,26 +60,28 @@ namespace API.Controllers
 
         }
 
-
+      
         [HttpPost]
         [Route("Login")]
         public async Task<ActionResult<LoginResponseDto>> Login(LoginRequestDto dto)
         {
-            AppUser user = await context.Users.Include(x => x.Photos).FirstOrDefaultAsync(x=>x.UserName.ToLower()== dto.UserName.ToLower());
+            AppUser user = await userManager.Users
+                .Include(x => x.Photos)
+                .FirstOrDefaultAsync(x=>x.UserName.ToLower()== dto.UserName.ToLower());
 
             if (user == null) return Unauthorized("User Not Exist");
+            var result = await userManager.CheckPasswordAsync(user,dto.Password);
 
-            using var hmac = new HMACSHA512(user.PasswordSalt);
-            byte[] passwordhash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password));
+            if (!result) return Unauthorized("Wrong Password");
+            
+          
            
-            if (!passwordhash.SequenceEqual(user.PasswordHash))
-                return Unauthorized("Wrong Password");
             
 
             return new LoginResponseDto
             {
                 UserName=user.UserName,
-                Token=tokenService.CreateToken(user),
+                Token= await tokenService.CreateToken(user),
                 PhotoUrl=user.Photos?.FirstOrDefault(x=>x.IsMain)?.Url,
                 KnownAs=user.KnownAs,
                 Gender=user.Gender
@@ -87,7 +93,7 @@ namespace API.Controllers
 
         private async Task<bool> UserExists(string username)
         {
-            return await context.Users.AnyAsync(x=>x.UserName.ToLower()==username.ToLower());
+            return await userManager.Users.AnyAsync(x=>x.UserName.ToLower()==username.ToLower());
 
         }
 

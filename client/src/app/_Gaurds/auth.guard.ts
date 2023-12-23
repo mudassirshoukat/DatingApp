@@ -13,7 +13,7 @@ export const authGuard: CanActivateFn =
     let service = inject(AccountService);
     let toast = inject(ToastrService);
     if (service.IsLogIn()) {
-      toast.success("Granted");
+    
       return true
     }
     toast.error("Danied");

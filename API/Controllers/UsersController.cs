@@ -42,7 +42,7 @@ namespace API.Controllers
         //}
 
         [HttpGet]
-        //[Authorize]
+
         public async Task<ActionResult<PagedList<MemberResponseDto>>> GetUsers([FromQuery] UserQueryParams prms)
         {
             var CurrentUser = await _UserRepo.GetUserByUserNameAsync(User.GetUserName());
@@ -87,7 +87,7 @@ namespace API.Controllers
         //    return Ok(mapper.Map<MemberResponseDto>(appUser));
         //}
 
-
+       
         [HttpGet()]
         [Route("{UserName}")]
         public async Task<ActionResult<MemberResponseDto>> GetUserByUserName(string UserName)

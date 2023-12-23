@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { UserModel } from '../_Models/UserModel';
 import { environment } from 'src/environments/environment';
+import { JsonPipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +19,13 @@ export class AccountService {
 
   LogIn(model: any) {
     return this.http.post<UserModel>(this.BaseUrl + "account/Login", model).pipe(
-      map((response: UserModel) => {
-        const user = response;
-        if (user) {
-          localStorage.setItem("user", JSON.stringify(user))
-          this.CurrentUserSource.next(user)
+      map((user: UserModel) => {
+        
+        console.log("logIn in accountservice")
+         this.SetCurrentUser(user)
+      
 
-        }
+    
         return user;
       })
     )
@@ -48,9 +49,15 @@ export class AccountService {
   }
 
 
-  SetCurrentUser(User: UserModel) {
-    this.CurrentUserSource.next(User);
+  SetCurrentUser(user: UserModel) {
+    user.Roles=[]
+   const roles= this.getDecodedToken(user.Token)
+   Array.isArray(roles) ?user.Roles=roles: user.Roles.push(roles);
+    this.CurrentUserSource.next(user);
+    localStorage.setItem("user", JSON.stringify(user))
   }
+
+
 
   Logout() {
     localStorage.removeItem("user");
@@ -69,6 +76,9 @@ export class AccountService {
   }
 
 
+  getDecodedToken(token:string){
+    return JSON.parse(atob(token.split('.')[1])).role
+  }
  
 
 }

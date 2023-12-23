@@ -76,7 +76,7 @@ namespace API.Data.Repository
 
         public  bool UserExists(int id)
         {
-            return  _context.Users.Any(x => x.id == id);
+            return  _context.Users.Any(x => x.Id == id);
         }
 
       

@@ -4,8 +4,7 @@
 
       <ul  class="navbar-nav me-auto mb-2 mb-md-0" >
       <ng-container *ngIf="accountService.CurrentUser$|async" > 
-  
-     
+
           <li class="nav-item">
           <a class="nav-link " 
           routerLink="/members" 
@@ -18,7 +17,13 @@
         <li class="nav-item">
           <a class="nav-link " routerLink="/messages" routerLinkActive="active">Masseges</a>
         </li>
+
+        <li *appHasRole="['Admin','Moderator']" class="nav-item">
+          <a class="nav-link " routerLink="/admin" routerLinkActive="active">Admin</a>
+        </li>
 </ng-container>
+
+
 <li class="nav-item">
   <a class="nav-link " routerLink="/error" routerLinkActive="active">Errors</a>
 </li>
