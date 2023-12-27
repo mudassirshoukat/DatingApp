@@ -2,8 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { UserModel } from '../_Models/UserModel';
+<<<<<<< HEAD
 import { environment } from 'src/environments/environment';
 import { JsonPipe } from '@angular/common';
+=======
+
+
+import { environment } from 'src/environments/environment.development';
+import { PresenceService } from './presence.service';
+>>>>>>> origin/temp
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +21,7 @@ export class AccountService {
   private BaseUrl = environment.ApiUrl
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private presenceService:PresenceService) { }
 
 
   LogIn(model: any) {
@@ -55,6 +62,10 @@ export class AccountService {
    Array.isArray(roles) ?user.Roles=roles: user.Roles.push(roles);
     this.CurrentUserSource.next(user);
     localStorage.setItem("user", JSON.stringify(user))
+<<<<<<< HEAD
+=======
+    this.presenceService.createHubConnection(user)
+>>>>>>> origin/temp
   }
 
 
@@ -62,6 +73,7 @@ export class AccountService {
   Logout() {
     localStorage.removeItem("user");
     this.CurrentUserSource.next(null);
+    this.presenceService.stopHubConnection();
   }
 
   IsLogIn(): boolean {

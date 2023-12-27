@@ -65,6 +65,8 @@ export class MembersService {
    
     return this.GetpaginatedResult<MemberModel[]>(this.baseurl + "users", params).pipe(
       map(res => {
+        console.log("my members")
+        console.log("res")
         this.memberCache.set(Object.values(prms).join('-'), res);
         return res;
       })

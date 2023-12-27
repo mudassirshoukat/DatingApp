@@ -28,24 +28,16 @@
 
       <button class="btn btn-primary ms-1" type="submit">Apply Filters</button>
       <button (click)="resetFilters()" class="btn btn-info ms-1" type="submit">Reset Filters</button>
-<div class="col">
-   <div class="btn-group float-end">
+      <div class="col">
+         <div class="btn-group float-end">
 
-      <button type="button"
-      class="btn btn-primary"
-      name="orderBy"
-      [(ngModel)]="queryPrms.OrderBy"
-      btnRadio="LastActive"
-      (click)="loadMembers()">LastActive</button>
+            <button type="button" class="btn btn-primary" name="orderBy" [(ngModel)]="queryPrms.OrderBy"
+               btnRadio="LastActive" (click)="loadMembers()">LastActive</button>
 
-      <button type="button"
-      class="btn btn-primary"
-      name="orderBy"
-      [(ngModel)]="queryPrms.OrderBy"
-      btnRadio="Created"
-      (click)="loadMembers()">NewMembers</button>
-   </div>
-</div>
+            <button type="button" class="btn btn-primary" name="orderBy" [(ngModel)]="queryPrms.OrderBy"
+               btnRadio="Created" (click)="loadMembers()">NewMembers</button>
+         </div>
+      </div>
 
    </form>
 </div>
@@ -59,8 +51,8 @@
 
 <!-- Pagination -->
 <div class="d-flex justify-content-center" *ngIf="pagination">
-   <pagination  [totalItems]="pagination.TotalItems" [itemsPerPage]="pagination.ItemsPerPage"
-      [maxSize]="10" [(ngModel)]="pagination.CurrentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
+   <pagination [totalItems]="pagination.TotalItems" [itemsPerPage]="pagination.ItemsPerPage" [maxSize]="10"
+      [(ngModel)]="pagination.CurrentPage" (pageChanged)="pageChanged($event)" previousText="&lsaquo;"
       nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
 
    </pagination>

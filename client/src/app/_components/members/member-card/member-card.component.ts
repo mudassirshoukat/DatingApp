@@ -5,6 +5,7 @@ import { take } from 'rxjs';
 import { LikeMembersModel } from 'src/app/_Models/LikeMembersModel';
 import { MemberModel } from 'src/app/_Models/MemberModel';
 import { LikeService } from 'src/app/_Services/like.service';
+import { PresenceService } from 'src/app/_Services/presence.service';
 
 @Component({
   selector: 'app-member-card',
@@ -14,7 +15,11 @@ import { LikeService } from 'src/app/_Services/like.service';
 export class MemberCardComponent {
   @Input() member:MemberModel|LikeMembersModel|undefined
 
-  constructor(private route:Router,private likeService:LikeService,private toast:ToastrService){}
+  constructor(
+    private route:Router,
+    private likeService:LikeService,
+    private toast:ToastrService,
+    public presenceService:PresenceService ){}
    
 
 AddLike(member:LikeMembersModel|MemberModel){

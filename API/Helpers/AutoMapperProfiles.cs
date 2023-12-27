@@ -9,7 +9,7 @@ using AutoMapper;
 
 namespace API.Helpers
 {
-    public class AutoMapperProfiles:Profile
+    public class AutoMapperProfiles : Profile
     {
         public AutoMapperProfiles()
         {
@@ -17,7 +17,7 @@ namespace API.Helpers
             .ForMember(dist => dist.PhotoUrl,
             opt => opt.MapFrom(src => src.Photos.FirstOrDefault(a => a.IsMain).Url));
 
-            
+
             CreateMap<Photo, PhotoResponseDto>();
             CreateMap<MemberUpdateRequestDto, AppUser>();
             CreateMap<RegisterRequestDto, AppUser>();
@@ -32,8 +32,12 @@ namespace API.Helpers
 
             CreateMap<Message, MessageDto>()
                 .ForMember(x => x.SenderPhotourl, o => o.MapFrom(src => src.Sender.Photos.FirstOrDefault(s => s.IsMain).Url))
-                .ForMember(x=>x.RecipientPhotoUrl,o=>o.MapFrom(src=>src.Recipient.Photos.FirstOrDefault(s=>s.IsMain).Url));
-       
+                .ForMember(x => x.RecipientPhotoUrl, o => o.MapFrom(src => src.Recipient.Photos.FirstOrDefault(s => s.IsMain).Url));
+
+
+            CreateMap<DateTime, DateTime>().ConvertUsing(x => DateTime.SpecifyKind(x, DateTimeKind.Utc));
+            CreateMap<DateTime?, DateTime?>().ConvertUsing(x => x.HasValue ? DateTime.SpecifyKind(x.Value, DateTimeKind.Utc) : null);
+
         }
     }
 }

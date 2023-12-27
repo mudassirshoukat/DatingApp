@@ -4,6 +4,7 @@ using API.Helpers;
 using API.Interfaces;
 using API.Interfaces.RepoInterfaces;
 using API.Services;
+using API.SignalR;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +12,8 @@ namespace API.Extentions
 {
     public static class ApplicationServicesExtensions
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection Services,IConfiguration Config ) {
+        public static IServiceCollection AddApplicationServices(this IServiceCollection Services, IConfiguration Config)
+        {
 
             Services.AddEndpointsApiExplorer();
             Services.AddSwaggerGen();
@@ -22,7 +24,7 @@ namespace API.Extentions
             {
                 options.UseSqlServer(Config.GetConnectionString("DefaultConnection"));
             });
-           Services.AddCors();
+            Services.AddCors();
             Services.AddScoped<ITokenService, TokenService>();
             Services.AddScoped<IPhotoService, PhotoService>();
 
@@ -32,9 +34,16 @@ namespace API.Extentions
 
             Services.AddAutoMapper(typeof(AutoMapperProfiles));
             Services.Configure<CloudinarySettings>(Config.GetSection("CloudinarySettings"));
-            
+
             Services.AddScoped<LogUserActivity>();  //actionFilter for LastActive Func
-            
+            Services.AddSignalR()
+                .AddJsonProtocol(options =>
+            {
+                options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+            }); ;
+            Services.AddSingleton<PresenceTracker>();
+
+
             return Services;
         }
     }

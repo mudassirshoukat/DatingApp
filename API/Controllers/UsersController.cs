@@ -29,27 +29,20 @@ namespace API.Controllers
 
 
 
-        // GET: api/Users
-        //[HttpGet]
-        ////[Authorize]
-        //public async Task<ActionResult<IEnumerable<MemberResponseDto>>> GetUsers([FromQuery] UserParams prms)
-        //{
-        //    var users = await _UserRepo.GetAllUserAsync(prms);
 
-
-        //    var dto = mapper.Map<IEnumerable<MemberResponseDto>>(users);
-        //    return Ok(dto);
-        //}
 
         [HttpGet]
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/temp
         public async Task<ActionResult<PagedList<MemberResponseDto>>> GetUsers([FromQuery] UserQueryParams prms)
         {
             var CurrentUser = await _UserRepo.GetUserByUserNameAsync(User.GetUserName());
             prms.CurrentUserName = CurrentUser.UserName;
             if (string.IsNullOrEmpty(prms.Gender))
             {
-                prms.Gender=CurrentUser.Gender=="male"?"female":"male";
+                prms.Gender = CurrentUser.Gender == "male" ? "female" : "male";
             }
 
 
@@ -67,25 +60,10 @@ namespace API.Controllers
             Response.AddPaginationHeader(
                 new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages));
 
-
-
             return Ok(mappedPagedList);
         }
 
-        // GET: api/Users/5
-        //[HttpGet()]
-        //[Route("{id:int}")]
-        //public async Task<ActionResult<MemberResponseDto>> GetUserById(int id)
-        //{
-        //    var appUser = await _UserRepo.GetUserByIdAsync(id);
 
-        //    if (appUser == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok(mapper.Map<MemberResponseDto>(appUser));
-        //}
 
        
         [HttpGet()]
@@ -101,6 +79,7 @@ namespace API.Controllers
 
             return Ok(mapper.Map<MemberResponseDto>(appUser));
         }
+
 
 
 
@@ -143,6 +122,7 @@ namespace API.Controllers
 
             return NoContent();
         }
+
 
 
 
@@ -190,12 +170,12 @@ namespace API.Controllers
                 var res = await _photoService.DeletePhotoAsync(photoToDelete.PublicId);
                 if (res.Error != null) return BadRequest("Failed To Delete Photo");
             }
-            
+
 
             user.Photos.Remove(photoToDelete);
 
-            if (await _UserRepo.SaveAllAsync()) return Ok(new { message= "Delete Success" });
-           
+            if (await _UserRepo.SaveAllAsync()) return Ok(new { message = "Delete Success" });
+
 
             return BadRequest(new { Message = "Failed to delete photo" });
         }
@@ -207,12 +187,12 @@ namespace API.Controllers
         {
             var user = await _UserRepo.GetUserByUserNameAsync(User.GetUserName());
             if (user == null) return NotFound();
-            
-            var photo=user.Photos.FirstOrDefault(x=>x.Id == PhotoId);
+
+            var photo = user.Photos.FirstOrDefault(x => x.Id == PhotoId);
             if (photo == null) return NotFound();
             if (photo.IsMain) return BadRequest("Photo Already Setted As Main");
             var currentmain = user.Photos.FirstOrDefault<Photo>(x => x.IsMain);
-            if(currentmain != null) currentmain.IsMain=false;
+            if (currentmain != null) currentmain.IsMain = false;
             photo.IsMain = true;
             if (await _UserRepo.SaveAllAsync()) return NoContent();
             return BadRequest("Problem setting the Main Photo");

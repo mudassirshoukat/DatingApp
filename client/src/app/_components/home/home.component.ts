@@ -1,34 +1,33 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { StreamInvocationMessage } from '@microsoft/signalr';
+import { PresenceService } from 'src/app/_Services/presence.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit{
-  RegisterMode=false;
-// users:any;
-constructor(private http:HttpClient){}
+export class HomeComponent implements OnInit {
+  RegisterMode = false;
+
+  users: string[] = [];
+  constructor() { }
 
   ngOnInit(): void {
+    // this.presenceService.onlineUsers$.subscribe({
+    //   next: users => this.users = users 
+    // })
     // this.GetUsers()
   }
 
-  // GetUsers() {
-  //   this.http.get("https://localhost:44381/api/Users").subscribe({
-  //     next: Response => this.users = Response,
-  //     error: error => console.log(error),
-  //     complete: () => console.log(this.users)
 
-  //   })
-  // }
-  RegisterToggle(){
-    this.RegisterMode=!this.RegisterMode;
+  RegisterToggle() {
+    this.RegisterMode = !this.RegisterMode;
   }
 
-  cancelRegisterationMode(event:boolean){
-    this.RegisterMode=event;
+  cancelRegisterationMode(event: boolean) {
+    this.RegisterMode = event;
   }
 
 }

@@ -22,7 +22,7 @@ namespace API.Data.Repository
             this.mapper = mapper;
         }
 
-
+        
 
         public void AddMessage(Message message)
         {
@@ -34,10 +34,14 @@ namespace API.Data.Repository
             context.Messages.Remove(message);
         }
 
+      
+
         public async Task<Message> GetMessage(int Id)
         {
             return await context.Messages.FindAsync(Id);
         }
+
+       
 
         public async Task<PagedList<MessageDto>> GetMessagesForUser(MessageQueryParams prms)
         {
@@ -84,10 +88,47 @@ namespace API.Data.Repository
         }
 
 
+        public void AddGroup(Group group)
+        {
+            context.Groups.Add(group);
+        }
+
+
+
+      
+        public void RemoveConnection(Connection connection)
+        {
+            context.Connections.Remove(connection);
+        }
+
+
+
+        public async Task<Connection> GetConnection(string connectionId)
+        {
+            return await context.Connections.FindAsync(connectionId);
+        }
+
+
+
+        public async Task<Group> GetMessageGroup(string GroupName)
+        {
+            return await context.Groups
+                .Include(x=>x.Connections)
+                .FirstOrDefaultAsync(x=>x.Name==GroupName);
+        }
+      
 
         public async Task<bool> SaveAllAsync()
         {
             return await context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<Group> GetGroupFromConnection(string ConnectionId)
+        {
+            return await context.Groups
+                .Include(x=>x.Connections)
+                .Where(x=>x.Connections.Any(c=>c.ConnectionId==ConnectionId))
+                .FirstOrDefaultAsync();
         }
     }
 }

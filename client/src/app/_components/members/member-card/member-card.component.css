@@ -36,3 +36,17 @@
 .animate{
     transition: all 0.3s ease-in-out;
 }
+
+
+
+.live-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #4CAF50; /* Green color */
+    border-radius: 50%;
+    margin-right: 5px; /* Adjust margin as needed */
+}
+
+.icon-green-color{
+    color: rgba(0, 128, 0, 0.676);
+}

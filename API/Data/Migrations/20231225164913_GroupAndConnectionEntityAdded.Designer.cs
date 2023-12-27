@@ -4,6 +4,7 @@ using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231225164913_GroupAndConnectionEntityAdded")]
+    partial class GroupAndConnectionEntityAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,8 +120,6 @@ namespace API.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
-<<<<<<< HEAD
-=======
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -174,55 +175,10 @@ namespace API.Migrations
 
                     b.Property<string>("GroupName")
                         .HasColumnType("nvarchar(450)");
->>>>>>> origin/temp
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-<<<<<<< HEAD
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("API.Entities.AppUserRole", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-=======
                     b.HasKey("ConnectionId");
 
                     b.HasIndex("GroupName");
@@ -238,7 +194,6 @@ namespace API.Migrations
                     b.HasKey("Name");
 
                     b.ToTable("Groups");
->>>>>>> origin/temp
                 });
 
             modelBuilder.Entity("API.Entities.Message", b =>
@@ -434,8 +389,6 @@ namespace API.Migrations
                     b.Navigation("User");
                 });
 
-<<<<<<< HEAD
-=======
             modelBuilder.Entity("API.Entities.Connection", b =>
                 {
                     b.HasOne("API.Entities.Group", null)
@@ -443,7 +396,6 @@ namespace API.Migrations
                         .HasForeignKey("GroupName");
                 });
 
->>>>>>> origin/temp
             modelBuilder.Entity("API.Entities.Message", b =>
                 {
                     b.HasOne("API.Entities.AppUser", "Recipient")
@@ -547,14 +499,11 @@ namespace API.Migrations
                     b.Navigation("Photos");
 
                     b.Navigation("UserRoles");
-<<<<<<< HEAD
-=======
                 });
 
             modelBuilder.Entity("API.Entities.Group", b =>
                 {
                     b.Navigation("Connections");
->>>>>>> origin/temp
                 });
 #pragma warning restore 612, 618
         }

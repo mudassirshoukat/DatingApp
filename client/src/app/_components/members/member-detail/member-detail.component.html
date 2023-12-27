@@ -1,10 +1,13 @@
-<div class="row" >
+<div class="row">
     <div class="col-4">
         <div class="card">
             <img src="{{member.PhotoUrl || './assets/user.png'}}" alt="{{member.KnownAs}}"
                 class="card-img-top img-thumbnail">
 
             <div class="card-body">
+                <div class="mb-2 text-success" *ngIf="(presenceService.onlineUsers$|async)?.includes(member.UserName)">
+                <i class="class fa fa-user-circle "></i> Online Now
+                </div>
                 <div>
                     <strong>Location:</strong>
                     <p>{{member.City}}, {{member.Country}}</p>
@@ -17,7 +20,7 @@
 
                 <div>
                     <strong>Last active:</strong>
-                    <p>{{member.LastActive+ 'z'| timeago}}</p>
+                    <p>{{member.LastActive| timeago}}</p>
                 </div>
 
                 <div>
@@ -48,7 +51,7 @@
             <tab heading="About {{member.KnownAs}}" (selectTab)="onTabActivated($event)">
                 <h4>Description</h4>
                 <p>{{member.Introduction}}</p>
-                
+
                 <h4>Looking For</h4>
                 <p>{{member.LookingFor}}</p>
             </tab>
@@ -59,11 +62,11 @@
             </tab>
 
             <tab heading="Photos" (selectTab)="onTabActivated($event)">
-                <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>    
-                    </tab>
+                <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>
+            </tab>
 
             <tab heading="Messages" (selectTab)="onTabActivated($event)">
-                <app-member-messages [memberUserName]="member.UserName" [messages]="messages"></app-member-messages>
+                <app-member-messages [memberUserName]="member.UserName"></app-member-messages>
             </tab>
 
         </tabset>
