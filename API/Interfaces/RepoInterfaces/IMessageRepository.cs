@@ -17,7 +17,6 @@ namespace API.Interfaces.RepoInterfaces
         Task<Connection> GetConnection(string connectionId);
         Task<Group> GetMessageGroup(string GroupName);
         Task<Group> GetGroupFromConnection(string ConnectionId);
-        Task<bool> SaveAllAsync();
-
+        
     }
 }

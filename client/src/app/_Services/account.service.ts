@@ -2,15 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { UserModel } from '../_Models/UserModel';
-<<<<<<< HEAD
-import { environment } from 'src/environments/environment';
-import { JsonPipe } from '@angular/common';
-=======
-
-
-import { environment } from 'src/environments/environment.development';
 import { PresenceService } from './presence.service';
->>>>>>> origin/temp
+import { environment } from 'src/environments/environment';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -62,10 +57,9 @@ export class AccountService {
    Array.isArray(roles) ?user.Roles=roles: user.Roles.push(roles);
     this.CurrentUserSource.next(user);
     localStorage.setItem("user", JSON.stringify(user))
-<<<<<<< HEAD
-=======
+
     this.presenceService.createHubConnection(user)
->>>>>>> origin/temp
+
   }
 
 

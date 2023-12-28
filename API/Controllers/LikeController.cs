@@ -14,14 +14,12 @@ namespace API.Controllers
     [Authorize]
     public class LikeController : BaseApiController
     {
-        private readonly IUserRepository userRepo;
-        private readonly ILikesRepository likeRepo;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public LikeController(IUserRepository UserRepo,ILikesRepository LikeRepo,IMapper mapper)
+        public LikeController(IUnitOfWork unitOfWork,IMapper mapper)
         {
-            userRepo = UserRepo;
-            likeRepo = LikeRepo;
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
 
@@ -31,12 +29,12 @@ namespace API.Controllers
         public async Task<ActionResult> AddLike( string UserName)
         {
             int SourceUserId = User.GetUserId();
-            var SourceUser=await userRepo.GetUserByIdAsync(SourceUserId);
-            var LikedUser =await userRepo.GetUserByUserNameAsync(UserName);
+            var SourceUser=await unitOfWork.UserRepository.GetUserByIdAsync(SourceUserId);
+            var LikedUser =await unitOfWork.UserRepository.GetUserByUserNameAsync(UserName);
 
             if (LikedUser == null) return NotFound();
             if (SourceUser.UserName == UserName) return BadRequest("User can't like ownSelf");
-            var userLike = await likeRepo.GetUserLike(SourceUserId, LikedUser.Id);
+            var userLike = await unitOfWork.LikesRepository.GetUserLike(SourceUserId, LikedUser.Id);
             if (userLike != null) return BadRequest("You Already Liked This Member");
 
             userLike = new UserLike
@@ -46,7 +44,7 @@ namespace API.Controllers
             };
             SourceUser.LikedUsers.Add(userLike);    
 
-            if (await userRepo.SaveAllAsync()) return Ok();
+            if (await unitOfWork.Complete()) return Ok();
             return BadRequest("Failed To Like This Member");
 
         }
@@ -58,7 +56,7 @@ namespace API.Controllers
           
 
             prms.UserId = User.GetUserId();
-            var likeUsers = await likeRepo.GetUserLikes(prms);
+            var likeUsers = await unitOfWork.LikesRepository.GetUserLikes(prms);
             var MappedList = mapper.Map<IEnumerable<LikeResponseDto>>(likeUsers);
             var mappedPagedList = new PagedList<LikeResponseDto>(
                 MappedList,

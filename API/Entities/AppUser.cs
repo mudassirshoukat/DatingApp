@@ -29,11 +29,10 @@ namespace API.Entities
         public List<Message> MessagesSent { get; set; }
         public List<Message> MessagesRecieved { get; set; }
         public ICollection<AppUserRole> UserRoles  { get; set; }
-<<<<<<< HEAD
-=======
+
 
         public int GetAge { get { return DateOfBirth.CalculateAge(); }  }
->>>>>>> origin/temp
+
 
 
     }

@@ -7,7 +7,11 @@
 
 
 
-      <ul class="chat" *ngIf="(messageService.messagesThread$ | async)!.length > 0">
+      <ul
+      #ScrollMe
+      style="overflow: scroll; height: 500px"
+      [scrollTop]="ScrollMe.scrollHeight"
+       class="chat" *ngIf="(messageService.messagesThread$ | async)!.length > 0">
         <li *ngFor="let message of (messageService.messagesThread$ | async)"
           [ngClass]="{
             'sent': message.SenderUserName !== memberUserName,

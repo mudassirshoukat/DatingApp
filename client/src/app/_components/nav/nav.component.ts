@@ -30,9 +30,14 @@ export class NavComponent implements OnInit {
       next: _=>{
         this.Route.navigateByUrl('/members'),
         this.toast.success("Login Success","Welcome")
+        this.model={}
       },
      
-    error: error => this.toast.error("Failed")
+    error: error => {
+      this.toast.error(error.error)
+    console.log(error.error);
+  }
+    
     })
   }
 

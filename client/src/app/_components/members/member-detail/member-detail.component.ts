@@ -2,11 +2,14 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from '@kolkov/ngx-gallery';
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
+import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
+import { LikeMembersModel } from 'src/app/_Models/LikeMembersModel';
 import { MemberModel } from 'src/app/_Models/MemberModel';
 import { MessageResponseModel } from 'src/app/_Models/MessageResponseModel';
 import { UserModel } from 'src/app/_Models/UserModel';
 import { AccountService } from 'src/app/_Services/account.service';
+import { LikeService } from 'src/app/_Services/like.service';
 import { MembersService } from 'src/app/_Services/members.service';
 import { MessageService } from 'src/app/_Services/message.service';
 import { PresenceService } from 'src/app/_Services/presence.service';
@@ -28,6 +31,8 @@ export class MemberDetailComponent implements OnInit,OnDestroy {
 
 
   constructor(
+    private toast:ToastrService,
+    private likeService:LikeService,
     private accountService: AccountService,
     private route: ActivatedRoute,
     private messageService: MessageService,
@@ -117,16 +122,12 @@ export class MemberDetailComponent implements OnInit,OnDestroy {
   }
 
 
-  // loadMessages() {
-  //   if (this.member?.UserName) {
-  //     this.messageService.getMessagesThread(this.member.UserName).pipe().subscribe({
-  //       next: res => {
-  //         this.messages = res
-  //       }
-  //     })
-  //   }
-  // }
-
+  AddLike(member:LikeMembersModel|MemberModel){
+    this.likeService.addLike(member.UserName).pipe(take(1)).subscribe({
+      next: _=>this.toast.success("You Have Liked "+member.KnownAs)
+      
+    })
+  }
 
 
 }

@@ -9,13 +9,14 @@ namespace API.Interfaces.RepoInterfaces
     public interface IUserRepository
     {
         void Update(AppUser user);
-        Task<bool> SaveAllAsync();
+        
         bool UserExists(int id);
         Task<PagedList<AppUser>> GetAllUserAsync(UserQueryParams prms);
 
         Task<AppUser> GetUserByIdAsync(int Id);
 
         Task<AppUser> GetUserByUserNameAsync(string UserName);
+        Task<string> GetGenderByUserName(string UserName);
 
         void DeleteUserAsync(AppUser user);
 

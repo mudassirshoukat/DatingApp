@@ -2,10 +2,9 @@ using API.Data;
 using API.Entities;
 using API.Extentions;
 using API.Middlewares;
-<<<<<<< HEAD
-=======
+
 using API.SignalR;
->>>>>>> origin/temp
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,10 +48,9 @@ try
     var context = services.GetRequiredService<DataContext>();
     var userManager = services.GetRequiredService<UserManager<AppUser>>();
     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
-<<<<<<< HEAD
-=======
+
     await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE [Connections]");
->>>>>>> origin/temp
+
     await context.Database.MigrateAsync();
     await Seed.SeedUsers(userManager,roleManager);
 }

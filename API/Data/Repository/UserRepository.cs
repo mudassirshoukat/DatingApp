@@ -68,19 +68,16 @@ namespace API.Data.Repository
             _context.Entry(user).State = EntityState.Modified;
         }
 
-        async Task<bool> IUserRepository.SaveAllAsync()
-        {
-            
-          return  await _context.SaveChangesAsync() >0;
-        }
+      
 
         public  bool UserExists(int id)
         {
             return  _context.Users.Any(x => x.Id == id);
         }
 
-      
-
-       
+        public async Task<string> GetGenderByUserName(string UserName)
+        {
+            return await _context.Users.Where(x=>x.UserName == UserName).Select(x=>x.Gender).FirstOrDefaultAsync();
+        }
     }
 }
