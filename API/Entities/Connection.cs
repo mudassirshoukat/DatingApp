@@ -1,19 +1,22 @@
-﻿namespace API.Entities
+﻿
+using System.ComponentModel.DataAnnotations;
+
+namespace API.Entities
 {
     public class Connection
     {
-
         public Connection()
         {
-            
-        }
-        public Connection(string connectionId, string userName)
-        {
-            ConnectionId = connectionId;
-            UserName = userName;
+
         }
 
-        public string  ConnectionId { get; set; }
+        public Connection(string connectionId, string username)
+        {
+            ConnectionId = connectionId;
+            UserName = username;
+        }
+        [Key]
+        public string ConnectionId { get; set; }
         public string UserName { get; set; }
     }
 }

@@ -38,6 +38,11 @@ namespace API.Helpers
             CreateMap<DateTime, DateTime>().ConvertUsing(x => DateTime.SpecifyKind(x, DateTimeKind.Utc));
             CreateMap<DateTime?, DateTime?>().ConvertUsing(x => x.HasValue ? DateTime.SpecifyKind(x.Value, DateTimeKind.Utc) : null);
 
+
+            CreateMap<Photo, PhotoApprovalResponseDto>()
+      .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.AppUser.UserName))
+      .ReverseMap();
+
         }
     }
 }

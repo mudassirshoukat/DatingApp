@@ -21,3 +21,8 @@ img.rounded-profile-pic {
 a.dropdown-toggle {
     margin-right: 8px; /* Adjust the margin as needed */
 }
+
+
+.gradient-background {
+    background: linear-gradient(to right, #a34e4e, #80add7); /* Adjust colors as needed */
+  }

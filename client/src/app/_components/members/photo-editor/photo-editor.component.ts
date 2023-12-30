@@ -8,6 +8,7 @@ import { PhotoModel } from 'src/app/_Models/PhotoModel';
 import { UserModel } from 'src/app/_Models/UserModel';
 import { AccountService } from 'src/app/_Services/account.service';
 import { MembersService } from 'src/app/_Services/members.service';
+import { PhotoService } from 'src/app/_Services/photo.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -23,7 +24,12 @@ export class PhotoEditorComponent implements OnInit {
   user: UserModel | undefined;
 
 
-  constructor(private accountService: AccountService, private memberService: MembersService,private toast:ToastrService ) {
+  constructor(
+    private accountService: AccountService,
+      private toast: ToastrService,
+      private photoService:PhotoService
+
+      ) {
     this.accountService.CurrentUser$.pipe(take(1)).subscribe({
       next: user => {
         if (user) this.user = user
@@ -41,7 +47,7 @@ export class PhotoEditorComponent implements OnInit {
 
   initializeUploader() {
     this.uploader = new FileUploader({
-      url: this.baseUrl + "users/add-photo",
+      url: this.baseUrl + "photos/add-photo",
       authToken: 'Bearer ' + this.user?.Token,
       isHTML5: true,
       allowedFileType: ["image"],
@@ -61,11 +67,11 @@ export class PhotoEditorComponent implements OnInit {
       if (Response) {
         var photo = JSON.parse(Response);
         this.member?.Photos.push(photo);
-        if(photo.IsMain&&this.user&&this.member){
-          this.user.PhotoUrl=photo.Url;
-          this.member.PhotoUrl=photo.Url;
-          this.accountService.SetCurrentUser(this.user)
-        }
+        // if (photo.IsMain && this.user && this.member) {
+        //   this.user.PhotoUrl = photo.Url;
+        //   this.member.PhotoUrl = photo.Url;
+        //   this.accountService.SetCurrentUser(this.user)
+        // }
       }
     };
 
@@ -75,12 +81,13 @@ export class PhotoEditorComponent implements OnInit {
 
 
   setMainPhoto(photo: PhotoModel) {
-    this.memberService.SetMainphoto(photo.Id).subscribe({
+    this.photoService.SetMainphoto(photo.Id).subscribe({
       next: _ => {
         if (this.member && this.user) {
           this.user.PhotoUrl = photo.Url;
-          this.member.PhotoUrl = photo.Url
+          this.member.PhotoUrl = photo.Url;
           this.accountService.SetCurrentUser(this.user);
+
           this.member.Photos.forEach(e => {
             if (e.IsMain && e.Id != photo.Id) e.IsMain = false;
             if (e.Id == photo.Id) e.IsMain = true;
@@ -91,23 +98,18 @@ export class PhotoEditorComponent implements OnInit {
   }
 
   deletePhoto(photoId: number) {
-    this.memberService.DeletePhoto(photoId).subscribe({
+    this.photoService.DeletePhoto(photoId).subscribe({
 
-      next:  res=> {
-        
-      
+      next: res => {
+
         if (this.member) {
-          this.member.Photos=this.member.Photos.filter(x => x.Id !== photoId);
+          this.member.Photos = this.member.Photos.filter(x => x.Id !== photoId);
         }
-         
-         
-        this.toast.success("Image Deleted","Success")
-        
-      
+        this.toast.success("Image Deleted", "Success")
 
       },
-      error:error=>console.log(error)
-      
+      error: error => console.log(error)
+
 
     })
   }

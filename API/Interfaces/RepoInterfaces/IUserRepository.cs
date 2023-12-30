@@ -16,6 +16,7 @@ namespace API.Interfaces.RepoInterfaces
         Task<AppUser> GetUserByIdAsync(int Id);
 
         Task<AppUser> GetUserByUserNameAsync(string UserName);
+        Task<AppUser> GetCurrentUserByUserNameAsync(string UserName);
         Task<string> GetGenderByUserName(string UserName);
 
         void DeleteUserAsync(AppUser user);

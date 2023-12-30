@@ -58,6 +58,12 @@ namespace API.Data.Repository
             return appUser;
        }
 
+        async Task<AppUser?> IUserRepository.GetCurrentUserByUserNameAsync(string UserName)
+        {
+            var appUser = await _context.Users.Include(x => x.Photos).IgnoreQueryFilters().FirstOrDefaultAsync(x => x.UserName.ToLower() == UserName.ToLower());
+            return appUser;
+        }
+
         void IUserRepository.DeleteUserAsync(AppUser user)
         {
             _context.Users.Remove(user);

@@ -51,14 +51,17 @@ try
 
     await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE [Connections]");
 
-    await context.Database.MigrateAsync();
-    await Seed.SeedUsers(userManager,roleManager);
+    //await context.Database.MigrateAsync();
+    //await Seed.SeedUsers(userManager, roleManager);
+    
 }
 catch (Exception ex)
 {
 
-    var logger = services.GetService<Logger<Program>>();
-    logger.LogError(ex, "An Error Occured during migration");
+
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An Error Occurred during migration");
+
 }
 
 app.Run();

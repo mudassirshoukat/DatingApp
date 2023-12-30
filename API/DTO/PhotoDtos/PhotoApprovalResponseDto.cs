@@ -1,13 +1,13 @@
-﻿using API.Entities;
-
-namespace API.DTO.PhotoDtos
+﻿namespace API.DTO.PhotoDtos
 {
-    public class PhotoResponseDto
+    public class PhotoApprovalResponseDto
     {
-        public int Id { get; set; }
-        public string Url { get; set; }
-        public bool IsMain { get; set; }
-        public bool IsApproved { get; set; }
 
+
+        public int Id { get; set; }
+        public string UserName { get; set; }
+        public string Url { get; set; }
+       
+        public bool IsApproved { get; set; }
     }
 }

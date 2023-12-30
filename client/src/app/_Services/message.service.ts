@@ -32,38 +32,35 @@ export class MessageService {
     this.hubConnection.start().catch(error => console.log(error));
 
 
-
-
-    this.hubConnection.on("GetMessagesThread", (messages :MessageResponseModel[]) => {
-  
+    this.hubConnection.on("GetMessagesThread", (messages: MessageResponseModel[]) => {
       this.currentMessageSource.next(messages);
-  
-      
     })
 
-this.hubConnection.on("UpdatedGroup",(group:GroupModel)=>{
-  
- if (group.Connections.some(x=>x.UserName===reciverUserName)) {
-  this.messagesThread$.pipe(take(1)).subscribe({
-    next: messages=>{
-      messages.forEach(message=>{
-        if(!message.DateRead){
-          message.DateRead=new Date(Date.now());
-        }
-      })
-      this.currentMessageSource.next([...messages]);
-    }
-  })
- }
-})
 
 
-    this.hubConnection.on("NewMessage",message=>{
+    this.hubConnection.on("UpdatedGroup", (group: GroupModel) => {
+
+      if (group.Connections.some(x => x.UserName === reciverUserName)) {
+        this.messagesThread$.pipe(take(1)).subscribe({
+          next: messages => {
+            messages.forEach(message => {
+              if (!message.DateRead) {
+                message.DateRead = new Date(Date.now());
+              }
+            })
+            this.currentMessageSource.next([...messages]);
+          }
+        })
+      }
+    })
+
+
+    this.hubConnection.on("NewMessage", message => {
       console.log(message)
       this.messagesThread$.pipe(take(1)).subscribe({
-        next:messages=>{
-          if(messages &&message){
-            this.currentMessageSource.next([...messages,message]);
+        next: messages => {
+          if (messages && message) {
+            this.currentMessageSource.next([...messages, message]);
           }
         }
       })
@@ -74,9 +71,9 @@ this.hubConnection.on("UpdatedGroup",(group:GroupModel)=>{
   }
 
   stopHubConnection() {
-    if(this.hubConnection){
-    this.hubConnection.stop();
-  }
+    if (this.hubConnection) {
+      this.hubConnection.stop();
+    }
   }
 
 
@@ -96,10 +93,10 @@ this.hubConnection.on("UpdatedGroup",(group:GroupModel)=>{
 
   async sendMessage(message: MessageRequestModel) {
     //invoke: returns promise. and by placing Async: we force it to send promise
-    return this.hubConnection?.invoke("NewMessage",message).catch(error=>{
-      
+    return this.hubConnection?.invoke("NewMessage", message).catch(error => {
+
       console.log(error)
-    }); 
+    });
   }
 
 

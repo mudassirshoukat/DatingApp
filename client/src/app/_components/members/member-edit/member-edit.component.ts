@@ -39,10 +39,18 @@ export class MemberEditComponent {
 
   
 loadMember(){
-  if(!this.user) return;
+  if(this.user){
   this.memberService.GetMember(this.user?.UserName).subscribe({
-    next: member=>this.member=member
+    next: member=>{
+      this.member=member
+
+      //below code for fresh main photo if new  approved.
+    if(this.member?.PhotoUrl){
+      this.user!.PhotoUrl=this.member.PhotoUrl
+      this.accountService.SetCurrentUser(this.user!)
+    }}
   })
+}
 }
 
 updateMember(){

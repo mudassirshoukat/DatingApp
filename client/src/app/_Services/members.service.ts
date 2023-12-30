@@ -1,5 +1,5 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { MemberModel } from '../_Models/MemberModel';
 import { environment } from 'src/environments/environment';
 import { UserModel } from '../_Models/UserModel';
@@ -76,19 +76,15 @@ export class MembersService {
 
 
 
-
-
   GetMember(UserName: string) {
     const member = [...this.memberCache.values()]
       .reduce((arr, e) => arr.concat(e.Result), [])
       .find((member: MemberModel) => member.UserName === UserName);
 
-
     if (member) return of(member)
-
-
     return this.http.get<MemberModel>(this.baseurl + "users/" + UserName)
   }
+  
 
   UpdateMember(member: MemberModel) {
     return this.http.put(this.baseurl + "users", member).pipe(
@@ -99,15 +95,6 @@ export class MembersService {
     )
   }
 
-
-  SetMainphoto(PhotoId: number) {
-    return this.http.put(this.baseurl + "users/set-main-photo/" + PhotoId.toString(), {});
-  }
-
-
-  DeletePhoto(PhotoId: number) {
-    return this.http.delete(this.baseurl + "users/delete-photo/" + PhotoId.toString());
-  }
 
 
  

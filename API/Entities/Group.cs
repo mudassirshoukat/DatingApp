@@ -11,6 +11,9 @@ namespace API.Entities
 
         [Key]
         public string Name { get; set; }
+
+        //nivagation properties
+
         public ICollection<Connection> Connections { get; set; } = new List<Connection>();
     }
 }

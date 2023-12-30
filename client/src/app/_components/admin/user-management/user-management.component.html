@@ -12,7 +12,7 @@
         <tbody>
             <tr *ngFor="let user of users">
             <td>{{user.UserName}}</td>
-            <td>{{user.Roles}}</td>
+            <td>[{{user.Roles}}]</td>
             <td><button class="btn btn-info" (click)="openRolesModal(user)">Edit Role</button></td>
             </tr>
         </tbody>

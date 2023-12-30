@@ -3,7 +3,7 @@ using API.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
+
 
 namespace API.Data
 {
@@ -65,7 +65,14 @@ namespace API.Data
             Builder.Entity<AppUser>().HasMany(a => a.UserRoles).WithOne(x => x.User).HasForeignKey(x => x.UserId).IsRequired();
             Builder.Entity<AppRole>().HasMany(a => a.UserRoles).WithOne(x => x.Role).HasForeignKey(x => x.RoleId).IsRequired();
 
+            //(connetions fluent validations)
+            //Builder.Entity<Connection>().HasKey(x=>x.ConnectionId);
+            //Builder.Entity<Connection>().Property(x=>x.ConnectionId).HasColumnType("varchar(255)");
 
+
+            //(Photos Fluent validation)
+            Builder.Entity<Photo>().HasQueryFilter(x => x.IsApproved);
+        
         }
 
 

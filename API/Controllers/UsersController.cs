@@ -9,6 +9,7 @@ using API.Interfaces.RepoInterfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace API.Controllers
 {
@@ -20,11 +21,11 @@ namespace API.Controllers
         private readonly IMapper mapper;
         private readonly IPhotoService _photoService;
 
-        public UsersController(IUnitOfWork unitOfWork,  IMapper mapper, IPhotoService photoService)
+        public UsersController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
-            this._photoService = photoService;
+
         }
 
 
@@ -67,7 +68,14 @@ namespace API.Controllers
         [Route("{UserName}")]
         public async Task<ActionResult<MemberResponseDto>> GetUserByUserName(string UserName)
         {
-            var appUser = await unitOfWork.UserRepository.GetUserByUserNameAsync(UserName);
+            var appUser = new AppUser();
+           
+            if (UserName.ToLower() == User.GetUserName().ToLower())
+
+                appUser = await unitOfWork.UserRepository.GetCurrentUserByUserNameAsync(UserName);
+
+            else
+                appUser = await unitOfWork.UserRepository.GetUserByUserNameAsync(UserName);
 
             if (appUser == null)
             {
@@ -121,78 +129,7 @@ namespace API.Controllers
         }
 
 
-
-
-        [HttpPost("add-photo")]
-        public async Task<ActionResult<PhotoResponseDto>> AddPhoto(IFormFile file)
-        {
-            AppUser user = await unitOfWork.UserRepository.GetUserByUserNameAsync(User.GetUserName());
-            if (user == null) return NotFound();
-            var result = await _photoService.AddPhotoAsync(file);
-            if (result.Error != null) return BadRequest(result.Error.Message);
-
-            var photo = new Photo
-            {
-                Url = result.SecureUrl.AbsoluteUri,
-                PublicId = result.PublicId
-
-            };
-            if (user.Photos.Count == 0)
-                photo.IsMain = true;
-            user.Photos.Add(photo);
-            if (await unitOfWork.Complete())
-                return CreatedAtAction(nameof(GetUserByUserName),
-                    new { UserName = user.UserName }, mapper.Map<PhotoResponseDto>(photo));
-            return BadRequest("Problem Adding Photo");
-
-        }
-
-
-
-        [HttpDelete("delete-photo/{Id:int}")]
-        public async Task<ActionResult> DeletePhoto(int Id)
-        {
-            var user = await unitOfWork.UserRepository.GetUserByUserNameAsync(User.GetUserName());
-            if (user == null) return BadRequest(new { Message = "User not found" });
-
-            var photoToDelete = user.Photos.FirstOrDefault(x => x.Id == Id);
-            if (photoToDelete == null) return NotFound(new { Message = "Photo not found" });
-
-
-
-            if (photoToDelete.IsMain) return BadRequest("You Cant Delete Main Photo");
-
-            if (photoToDelete.PublicId != null)
-            {
-                var res = await _photoService.DeletePhotoAsync(photoToDelete.PublicId);
-                if (res.Error != null) return BadRequest("Failed To Delete Photo");
-            }
-
-
-            user.Photos.Remove(photoToDelete);
-
-            if (await unitOfWork.Complete()) return Ok(new { message = "Delete Success" });
-
-
-            return BadRequest(new { Message = "Failed to delete photo" });
-        }
-
-
-
-        [HttpPut("set-main-photo/{PhotoId}")]
-        public async Task<ActionResult> SetMainPhoto(int PhotoId)
-        {
-            var user = await unitOfWork.UserRepository.GetUserByUserNameAsync(User.GetUserName());
-            if (user == null) return NotFound();
-
-            var photo = user.Photos.FirstOrDefault(x => x.Id == PhotoId);
-            if (photo == null) return NotFound();
-            if (photo.IsMain) return BadRequest("Photo Already Setted As Main");
-            var currentmain = user.Photos.FirstOrDefault<Photo>(x => x.IsMain);
-            if (currentmain != null) currentmain.IsMain = false;
-            photo.IsMain = true;
-            if (await unitOfWork.Complete()) return NoContent();
-            return BadRequest("Problem setting the Main Photo");
-        }
     }
+
+
 }

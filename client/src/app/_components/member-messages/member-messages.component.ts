@@ -1,7 +1,6 @@
 import { ImplicitReceiver } from '@angular/compiler';
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-
 import { MessageRequestModel } from 'src/app/_Models/Request/MessageRequestModel';
 import { MessageService } from 'src/app/_Services/message.service';
 
@@ -35,9 +34,7 @@ export class MemberMessagesComponent implements OnInit {
         this.messageForm?.reset();
       })
     }
-  }
-
-
-
+  }//
+ 
 
 }

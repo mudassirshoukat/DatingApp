@@ -11,11 +11,6 @@ namespace API.Extentions
 {
     public static class IdentityServicesExtentions
     {
-
-
-
-
-     
         public static object AddIdentityServices(this IServiceCollection Services, IConfiguration Configuration)
 
         {
@@ -76,7 +71,6 @@ namespace API.Extentions
 
                 opt.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin","Moderator"));
 
-                opt.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
 
             }
             );

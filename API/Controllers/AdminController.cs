@@ -1,4 +1,7 @@
-﻿using API.Entities;
+﻿using API.Data;
+using API.DTO.PhotoDtos;
+using API.Entities;
+using API.Interfaces.RepoInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -11,10 +14,12 @@ namespace API.Controllers
     public class AdminController : BaseApiController
     {
         private readonly UserManager<AppUser> usermanager;
+        private readonly IUnitOfWork unitOfWork;
 
-        public AdminController(UserManager<AppUser> usermanager)
+        public AdminController(UserManager<AppUser> usermanager,IUnitOfWork unitOfWork)
         {
             this.usermanager = usermanager;
+            this.unitOfWork = unitOfWork;
         }
 
 
@@ -40,10 +45,6 @@ namespace API.Controllers
 
         [Authorize(Policy = "RequireAdminRole")]
         [HttpPost("edit-roles/{UserName}")]
-
-
-
-
         public async Task<ActionResult<IEnumerable<string>>> EditRoles(string UserName, [FromQuery] string Roles)
 
         {
@@ -63,24 +64,10 @@ namespace API.Controllers
 
             return Ok(await usermanager.GetRolesAsync(user));
 
-
-
-
-
-
-
-
-
-
         }
 
 
-        [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpGet("Photos-to-Moderate")]
-        public ActionResult GetPhotosForModeration()
-        {
-            return Ok("Admins or Moderates can see this");
-        }
+
 
     }
 }
