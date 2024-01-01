@@ -23,10 +23,14 @@
           <a class="nav-link position-relative" routerLink="/messages" routerLinkActive="active">
             Masseges
             <span class="badge position-absolute top-1 start-80 translate-middle" style="color: rgba(41, 147, 15, 0.801); font-size: 1.0em;  letter-spacing: -0.05em">
-              10 <!-- Your dynamic counter value goes here -->
+             
+              {{
+               ((messageService.unReadMessages | async)!.length >= 50 ? '50+' 
+               : (( messageService.unReadMessages | async)!.length || '')) }}
             </span>
           </a>
         </li>
+
 
         <li *appHasRole="['Admin','Moderator']" class="nav-item">
           <a class="nav-link " routerLink="/admin" routerLinkActive="active">Admin</a>

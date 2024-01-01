@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AccountService } from '../../_Services/account.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MessageService } from 'src/app/_Services/message.service';
+import { take } from 'rxjs';
 
 
 @Component({
@@ -12,11 +14,22 @@ import { ToastrService } from 'ngx-toastr';
 export class NavComponent implements OnInit {
   // LoggedIn = false;
   model: any = {}
-  ngOnInit(): void {
-   
+  messageCount="0"
+  ngOnInit() {
+   this.messageService.unReadMessages.pipe(take(1)).subscribe({
+    next: msgs=>{
+      
+    if(msgs.length!=0)
+      this.messageCount="18"
+      if(msgs.length>=50)
+      this.messageCount+="+"
+
+    }
+   })
    }
   constructor(
     public accountService: AccountService,
+    public messageService:MessageService,
     private Route:Router,
     public toast:ToastrService
     

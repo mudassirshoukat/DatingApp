@@ -1,4 +1,7 @@
-﻿using API.Extentions;
+﻿using API.Data;
+using API.Extentions;
+using API.Helpers.QueryParams;
+using API.Interfaces.RepoInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
@@ -8,10 +11,12 @@ namespace API.SignalR
     public class PresenceHub : Hub
     {
         private readonly PresenceTracker tracker;
+        private readonly IUnitOfWork unitOfWork;
 
-        public PresenceHub(PresenceTracker tracker)
+        public PresenceHub(PresenceTracker tracker,IUnitOfWork unitOfWork)
         {
             this.tracker = tracker;
+            this.unitOfWork = unitOfWork;
         }
 
 
@@ -23,6 +28,10 @@ namespace API.SignalR
             if (isOnline)
                 await Clients.Others.SendAsync("UserIsOnline", Context.User.GetUserName());
 
+            var Unread = await unitOfWork.MessageRepository
+                .GetMessagesForUser(new MessageQueryParams { UserName = Context.User.GetUserName() ,PageSize=50});
+            Unread.OrderByDescending(x => x.MessageSent);
+            await Clients.Caller.SendAsync("GetUnReadMessages", Unread);
 
             var connectedUsers = tracker.GetOnlineUsers();
             await Clients.Caller.SendAsync("GetOnlineUsers", connectedUsers);

@@ -1,9 +1,11 @@
 ﻿using API.DTO.MessageDtos;
 using API.Entities;
 using API.Extentions;
+using API.Helpers.QueryParams;
 using API.Interfaces.RepoInterfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 
 namespace API.SignalR
@@ -32,22 +34,32 @@ namespace API.SignalR
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
             var group = await AddToGroup(groupName);
 
-
+          
             await Clients.Group(groupName).SendAsync("UpdatedGroup", group);
 
-          
 
             var messages = await unitOfWork.MessageRepository.GetMessageThread(Context.User.GetUserName(), otherUser);
-            if (unitOfWork.HasChanges()) await unitOfWork.Complete();
+            if (unitOfWork.HasChanges())
+            {
+                await unitOfWork.Complete();
+                //there should be changes in UnRead messages. need send new unread state
+                await GetUnReadMessages(Context.User.GetUserName());
+            }
             await Clients.Caller.SendAsync("GetMessagesThread", messages);
 
         }
 
 
+
+
+
+      
+
         public async Task NewMessage(CreateMessageDto messageDto)
         {
             var CurrentUserName = Context.User.GetUserName();
-            if (CurrentUserName.ToLower() == messageDto.RecipientUserName.ToLower()) throw new HubException("You Connot Send message To Youself");
+            if (CurrentUserName.ToLower() == messageDto.RecipientUserName.ToLower())
+                throw new HubException("You Connot Send message To Youself");
 
             var Sender = await unitOfWork.UserRepository.GetUserByUserNameAsync(CurrentUserName);
             var Recipient = await unitOfWork.UserRepository.GetUserByUserNameAsync(messageDto.RecipientUserName);
@@ -74,15 +86,13 @@ namespace API.SignalR
 
                 if (connections != null)
                 {
-                    await presenceHub.Clients.Clients(connections).SendAsync("NewMessageNotification", new { UserName = Sender.UserName, KnownAs = Sender.KnownAs });
+                    await presenceHub.Clients.Clients(connections)
+                        .SendAsync("NewMessageNotification",
+                        new { Message = mapper.Map<MessageDto>(message), SenderKnownAs = Sender.KnownAs });
                 }
 
 
-
             }
-
-
-
 
             unitOfWork.MessageRepository.AddMessage(message);
             if (await unitOfWork.Complete())
@@ -104,6 +114,15 @@ namespace API.SignalR
 
 
 
+
+        private async Task GetUnReadMessages(string UserName)
+        {
+          
+
+            var Unread = await unitOfWork.MessageRepository.GetMessagesForUser(new MessageQueryParams { UserName = UserName ,PageSize=50});
+            Unread.OrderByDescending(x => x.MessageSent);
+            await Clients.Caller.SendAsync("GetUnReadMessages", Unread);
+        }
 
 
         private string GetGroupName(string caller, string other)

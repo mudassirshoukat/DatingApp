@@ -9,6 +9,7 @@ import { MessageRequestModel } from '../_Models/Request/MessageRequestModel';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { UserModel } from '../_Models/UserModel';
 import { GroupModel } from '../_Models/ChatGroupModels';
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,12 @@ export class MessageService {
   baseurl = environment.ApiUrl
   hubUrl = environment.hubUrl
   private hubConnection?: HubConnection
-  private currentMessageSource = new BehaviorSubject<MessageResponseModel[]>([]);
-  messagesThread$ = this.currentMessageSource.asObservable();
+  private messageThreadSource = new BehaviorSubject<MessageResponseModel[]>([]);
+  messagesThread$ = this.messageThreadSource.asObservable();
+  private unReadMessagesSource = new BehaviorSubject<MessageResponseModel[]>([]);
+  unReadMessages = this.unReadMessagesSource.asObservable();
+
+
 
   constructor(private http: HttpClient) { }
 
@@ -33,12 +38,15 @@ export class MessageService {
 
 
     this.hubConnection.on("GetMessagesThread", (messages: MessageResponseModel[]) => {
-      this.currentMessageSource.next(messages);
+   
+
+      this.messageThreadSource.next(messages);
     })
 
 
 
     this.hubConnection.on("UpdatedGroup", (group: GroupModel) => {
+      console.log("UpdatedGroup")
 
       if (group.Connections.some(x => x.UserName === reciverUserName)) {
         this.messagesThread$.pipe(take(1)).subscribe({
@@ -48,24 +56,30 @@ export class MessageService {
                 message.DateRead = new Date(Date.now());
               }
             })
-            this.currentMessageSource.next([...messages]);
+            this.messageThreadSource.next([...messages]);
           }
         })
       }
     })
 
+    this.hubConnection.on("GetUnReadMessages", (unReadMessages: MessageResponseModel[]) => {
+
+      this.unReadMessagesSource.next(unReadMessages);
+   
+    })
+
+
 
     this.hubConnection.on("NewMessage", message => {
-      console.log(message)
+  
       this.messagesThread$.pipe(take(1)).subscribe({
         next: messages => {
           if (messages && message) {
-            this.currentMessageSource.next([...messages, message]);
+            this.messageThreadSource.next([...messages, message]);
           }
         }
       })
     })
-
 
 
   }
@@ -79,30 +93,46 @@ export class MessageService {
 
 
 
-
-
   getMessages(prms: MessageQueryParams) {
     return this.GetpaginatedResult<MessageResponseModel[]>(this.baseurl + "messages", this.GetPaginatedHeader(prms))
 
   }
 
-  getMessagesThread(userName: string) {
-    return this.http.get<MessageResponseModel[]>(this.baseurl + "messages/thread/" + userName);
+  // getMessagesThread(userName: string) {
+  //   return this.http.get<MessageResponseModel[]>(this.baseurl + "messages/thread/" + userName);
+  // }
+
+  setUnReadMessages(messages:MessageResponseModel[]){
+    this.unReadMessagesSource.next(messages);
+   
+   
+  }
+
+  pushNewUnreadMessage(message: MessageResponseModel) {
+    this.unReadMessages.pipe(take(1)).subscribe({
+      next: messages => {
+        this.unReadMessagesSource.next([ message,...messages])
+      }
+    })
+    
   }
 
 
   async sendMessage(message: MessageRequestModel) {
     //invoke: returns promise. and by placing Async: we force it to send promise
     return this.hubConnection?.invoke("NewMessage", message).catch(error => {
-
       console.log(error)
     });
   }
 
 
   deleteMessage(id: number) {
+    
     return this.http.delete(this.baseurl + `messages/${id}`)
+    
   }
+
+
 
   private GetpaginatedResult<T>(url: string, params: HttpParams) {
 

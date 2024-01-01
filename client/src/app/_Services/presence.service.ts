@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
 import { UserModel } from '../_Models/UserModel';
 import { BehaviorSubject, take } from 'rxjs';
+import { MessageResponseModel } from '../_Models/MessageResponseModel';
+import { MessageService } from './message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,7 @@ export class PresenceService {
   private onlineUserSource = new BehaviorSubject<string[]>([]);
   onlineUsers$ = this.onlineUserSource.asObservable();
 
-  constructor(private toast: ToastrService, private ngZone: NgZone) { }
+  constructor(private toast: ToastrService, private messageService: MessageService) { }
 
 
 
@@ -27,7 +29,6 @@ export class PresenceService {
     this.hubConnection.start().catch(error => console.log(error))
 
     this.hubConnection.on('UserIsOnline', newOnlineUser => {
-      
 
       this.onlineUsers$.pipe(take(1)).subscribe({
         next: onlineUsers => this.onlineUserSource.next([...onlineUsers, newOnlineUser])
@@ -36,7 +37,6 @@ export class PresenceService {
     })
 
     this.hubConnection.on('UserIsOffline', leaveUser => {
-    
       this.onlineUsers$.pipe(take(1)).subscribe({
         next: OnlineUsers => this.onlineUserSource.next(OnlineUsers.filter(x => x !== leaveUser))
       })
@@ -46,20 +46,24 @@ export class PresenceService {
     this.hubConnection.on("GetOnlineUsers", response => {
       if (response && response.Result) {
         const users = response.Result; // Extract the usernames from the "result" property
-       
         this.onlineUserSource.next(users);
 
       }
     })
 
 
-    this.hubConnection.on("NewMessageNotification", ({ UserName, KnownAs }) => {
-     
-      this.toast.info("New Message From " + KnownAs)
+    this.hubConnection.on("NewMessageNotification", ({ Message, SenderKnownAs }: { Message: MessageResponseModel, SenderKnownAs: string }) => {
+
+      this.toast.info("New Message From " + SenderKnownAs)
+      this.messageService.pushNewUnreadMessage(Message);
 
     })
 
+    this.hubConnection.on("GetUnReadMessages", ( messages: MessageResponseModel[]) => {
 
+     this.messageService.setUnReadMessages(messages);
+
+    })
 
   }
 
